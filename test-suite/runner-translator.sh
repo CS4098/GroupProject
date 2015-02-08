@@ -15,6 +15,8 @@ if ! [[ -x $translator ]] || [[ -d $translator ]]; then
 	exit 1
 fi
 
+transdir=(`dirname $translator`) # Directory where temporary artefacts to be placed
+
 # Check the second parameter is the path to a directory
 suite=$2
 if ! [[ -d $suite ]]; then
@@ -24,8 +26,14 @@ fi
 
 # Set up logging
 ts=(`date "+%F-%H-%M-%S"`)
-logfile="$ts.log"
+logdir="$transdir/logs-translator"
+mkdir -p $logdir
+logfile="$logdir/$ts.log"
 touch $logfile
+
+echo "-------------------------------------------------------"
+echo " PML-TO-PROMELA TRANSLATOR TESTS"
+echo "-------------------------------------------------------"
 
 # Set up counts
 count_total=0
@@ -34,22 +42,59 @@ count_failed=0
 # Process input tests
 for dir in $2/*/
 do
-	echo "[--- $dir ---]" >> $logfile
+	echo -e "[--- $dir ---]" >> $logfile
 	for filepath in $dir/*.pml
 	do
+		# Get all necessary file paths
 		pml_filename=(`basename $filepath`)
-		echo -e "\tTest found: $pml_filename" >> $logfile
+		echo -e "PML file found: $pml_filename" >> $logfile
 
 		basename="${pml_filename%.*}"
 
 		expected_filepath="$dir$basename.pml.expected"
 		if ! [[ -f  $expected_filepath ]]; then
-			echo -e "\tError: expected promela file not found, skipping." >> $logfile
+			echo -e "Error: expected promela file \"$expected_filepath\" not found, skipping." >> $logfile
 			continue
 		fi
 		expected_filename=(`basename $expected_filepath`)
-		echo -e "\tExpected promela file found: $expected_filename" >> $logfile
+		echo -e "Expected promela file found: $expected_filename" >> $logfile
 		count_total=$((count_total+1))
+
+		actual_filename="$transdir/$basename.pml.actual"
+
+		# Run program (convert PML to promela)
+		com="./$translator $pml_filename $actual_filename"
+		echo -e "Running test: $basename... " >> $logfile
+		echo -n "Running test: $basename... "
+		echo -e "-------" >> $logfile
+		$com >> $logfile
+		echo -e "-------" >> $logfile
+
+		# Translator fails to create promela file
+		if [[ ! -f $actual_filename ]]; then
+			echo -e "Error: no promela file created"
+			count_failed=$((count_failed+1))
+			echo "FAIL" >> $logfile
+			echo "FAIL"
+			continue
+		fi
+
+		# Compare output
+		result=(`diff -q $expected_filepath $actual_filename`)
+		if [[ "$result" != "" ]]; then
+			echo -e "*** Expected and actual promela files differ ***" >> $logfile
+			count_failed=$((count_failed+1))
+			echo "FAIL" >> $logfile
+			echo "FAIL"
+		else
+			echo "PASS" >> $logfile
+			echo "PASS"
+		fi
+
+		# Clean up artefacts
+		if [[ -f $actual_filename ]]; then
+			rm $actual_filename
+		fi
 
 		echo >> $logfile
 	done
@@ -57,7 +102,7 @@ done
 
 # Print summary to file and console
 count_succeeded=$(($count_total-$count_failed))
-summary="[=== SUMMARY ===]\n\tTOTAL: $count_total\n\tFAILED: $count_failed\n\tSUCCEEDED: $count_succeeded"
+summary="\nRESULTS: Total: $count_total, Failures: $count_failed"
 echo -e $summary >> $logfile
 echo -e $summary
-echo -e "\nLog available at: $logfile"
+echo -e "Log available at: $logfile\n"
