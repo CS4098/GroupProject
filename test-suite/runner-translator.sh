@@ -1,6 +1,6 @@
 #!/bin/bash
 
-usage="Usage: runner <path-to-binary> <path-to-test-dir>"
+usage="Usage: runner <path-to-binary> <path-to-input-test-dir>"
 
 # Check number of parameters
 if [[ "$#" -ne 2 ]]; then
@@ -18,7 +18,7 @@ fi
 # Check the second parameter is the path to a directory
 suite=$2
 if ! [[ -d $suite ]]; then
-	echo "$usage: given path to test-suite is not a directory."
+	echo "$usage: given path to input tests is not a directory."
 	exit 1
 fi
 
