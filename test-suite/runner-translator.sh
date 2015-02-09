@@ -1,6 +1,13 @@
 #!/bin/bash
 
 usage="Usage: runner <path-to-binary> <path-to-input-test-dir>"
+default="\e[0m"
+green="\e[0;32m"
+red="\e[0;31m"
+msg_fail="FAIL"
+msg_pass="PASS"
+msg_fail_con=$red$msg_fail$default
+msg_pass_con=$green$msg_pass$default
 
 # Check number of parameters
 if [[ "$#" -ne 2 ]]; then
@@ -31,6 +38,7 @@ mkdir -p $logdir
 logfile="$logdir/$ts.log"
 touch $logfile
 
+echo ""
 echo "-------------------------------------------------------"
 echo " PML-TO-PROMELA TRANSLATOR TESTS"
 echo "-------------------------------------------------------"
@@ -74,8 +82,8 @@ do
 		if [[ ! -f $actual_filename ]]; then
 			echo -e "Error: no promela file created"
 			count_failed=$((count_failed+1))
-			echo "FAIL" >> $logfile
-			echo "FAIL"
+			echo $msg_fail >> $logfile
+			echo -e $msg_fail_con
 			continue
 		fi
 
@@ -84,11 +92,11 @@ do
 		if [[ "$result" != "" ]]; then
 			echo -e "*** Expected and actual promela files differ ***" >> $logfile
 			count_failed=$((count_failed+1))
-			echo "FAIL" >> $logfile
-			echo "FAIL"
+			echo $msg_fail >> $logfile
+			echo -e $msg_fail_con
 		else
-			echo "PASS" >> $logfile
-			echo "PASS"
+			echo $msg_pass >> $logfile
+			echo -e $msg_pass_con
 		fi
 
 		# Clean up artefacts
