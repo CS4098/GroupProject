@@ -1,6 +1,6 @@
 #!/bin/bash
 
-usage="Usage: runner <path-to-binary> <path-to-input-test-dir>"
+usage="Usage: $0 <path-to-binary> <path-to-input-test-dir>"
 default="\e[0m"
 green="\e[0;32m"
 red="\e[0;31m"
@@ -71,7 +71,7 @@ do
 		actual_filename="$transdir/$basename.pml.actual"
 
 		# Run program (convert PML to promela)
-		com="./$translator $pml_filename $actual_filename"
+		com="./$translator $dir$pml_filename $actual_filename"
 		echo -e "Running test: $basename... " >> $logfile
 		echo -n "Running test: $basename... "
 		echo -e "-------" >> $logfile

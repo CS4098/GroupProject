@@ -9,7 +9,7 @@ build:
 test:
 	@make build
 	@mvn test
-	#@./test-suite/runner-translator.sh <path-to-translator-binary> ./test-suite/translator-inputs
+	@./test-suite/runner-translator.sh ./test-suite/dummy-exec.sh ./test-suite/translator-inputs
 
 install:
 ifdef DESTDIR
