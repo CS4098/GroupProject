@@ -19,6 +19,7 @@ After Docker has been installed:
 
 * ```docker pull cs4098/groupproject```
 * ```git clone https://github.com/cs4098/groupproject```
+* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 * ```cd groupproject && ./launch.sh```
 * ```cd /opt/group-project```
 
