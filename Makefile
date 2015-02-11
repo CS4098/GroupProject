@@ -4,11 +4,11 @@ default:
 	@make test
 
 build:
-	@mvn validate compile
+	@gradle build
 
 test:
 	@make build
-	@mvn test
+	@gradle test
 
 install:
 ifdef DESTDIR
@@ -21,6 +21,6 @@ else
 endif
 
 clean:
-	@mvn clean
+	@gradle clean
 
 		
