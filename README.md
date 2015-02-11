@@ -3,6 +3,8 @@ Project repo for the CS4098 module in Trinity College Dublin
 
 ## Requirements
 
+### Docker
+
 #### Mac OSX
 
 See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
@@ -22,6 +24,12 @@ After Docker has been installed:
 * ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 * ```cd groupproject && ./launch.sh```
 * ```cd /opt/group-project```
+
+### Http Server
+Currently the html file can be tested "locally" by changing the action in the form from "python.cgi" to "http://dar.netsoc.ie/group/python.cgi"
+
+To run on an apache server, make sure the config allows for cgi scripts http://httpd.apache.org/docs/2.2/howto/cgi.html
+If the python.cgi file is moved to a cgi-bin directory, change the action in the html form appropriately
 
 ## Building
 
