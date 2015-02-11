@@ -63,7 +63,7 @@ Update Classpath and add cabal to Path
 * ```echo 'export PATH="$HOME/.cabal/bin:$PATH"' >> ~/.bashrc```
 
 Compile BNCF java files
-* ```cd /opt/pml-bnfc/java1.5 && bnfc -m -java ../PML.cf```
+* ```cd /opt/pml-bnfc/java1.5 && bnfc -m -java ../PML.cf && make```
 
 
 ## Building
