@@ -4,6 +4,7 @@
 target/
 .idea/
 *.iml
+test-suite/logs-translator/
 
 # Gradle folder and build
 .gradle/
