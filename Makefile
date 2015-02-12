@@ -4,11 +4,12 @@ default:
 	@make test
 
 build:
-	@mvn validate compile
+	@gradle build
 
 test:
 	@make build
-	@mvn test
+	@gradle test
+	@./test-suite/runner-translator.sh ./test-suite/dummy-exec.sh ./test-suite/translator-inputs
 
 install:
 ifdef DESTDIR
@@ -21,6 +22,6 @@ else
 endif
 
 clean:
-	@mvn clean
+	@gradle clean
 
 		
