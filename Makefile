@@ -4,11 +4,10 @@ default:
 	@make test
 
 build:
-	@gradle build
+
 
 test:
 	@make build
-	@gradle test
 	@./test-suite/runner-translator.sh ./test-suite/dummy-exec.sh ./test-suite/translator-inputs
 
 install:
@@ -22,6 +21,6 @@ else
 endif
 
 clean:
-	@gradle clean
+
 
 		
