@@ -1,15 +1,15 @@
 #!/usr/bin/env/python
 
 import sys
-import os.path
+from os.path import isdir, split, abspath
 import subprocess
 
 
 # Read in a pml file and save to an xml file
 def translate_pml_file(xml_file, pml_file):
 
-    pml_path = os.path.abspath(pml_file.name)
-    xml_path = os.path.abspath(xml_file.name)
+    pml_path = abspath(pml_file.name)
+    xml_path = abspath(xml_file)
 
     # Call XML generator
     # TODO: Remove abs-path
@@ -19,15 +19,24 @@ def translate_pml_file(xml_file, pml_file):
         sys.exit(1)
 
 
+def valid_xml_path(xml_path):
+    path, _ = split(xml_path)
+    return isdir(path)
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Program to output the ast of a PML program in XML format")
-    parser.add_argument('-x', '--xml', required=True, type=file, help="Output abstract syntax tree in XML format")
+    parser.add_argument('-x', '--xml', required=True, type=str, help="Output abstract syntax tree in XML format")
     parser.add_argument('-p', '--pml', required=True, type=file, help="Input PML file")
 
     try:
         args = parser.parse_args()
-        translate_pml_file(args.xml, args.pml)
+        if valid_xml_path(abspath(args.xml)):
+            translate_pml_file(args.xml, args.pml)
+        else:
+            print "XML path is invalid."
+            sys.exit(1)
     except IOError, msg:
         parser.error(str(msg))
 
