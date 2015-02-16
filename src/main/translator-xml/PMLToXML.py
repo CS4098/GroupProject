@@ -12,7 +12,8 @@ def translate_pml_file(xml_file, pml_file):
     xml_path = os.path.abspath(xml_file.name)
 
     # Call XML generator
-    return_code = subprocess.call("Pmlxml %s %s" % (xml_path, pml_path), shell=True)
+    # TODO: Remove abs-path
+    return_code = subprocess.call("/opt/pml-bnfc/xml/Pmlxml %s %s" % (xml_path, pml_path), shell=True)
     if return_code != 0:
         print "Error occured reading PML file, exiting."
         sys.exit(1)
