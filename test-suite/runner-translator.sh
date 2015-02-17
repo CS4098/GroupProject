@@ -62,7 +62,7 @@ do
 
 		expected_filepath="$dir$basename.pml.expected"
 		if ! [[ -f  $expected_filepath ]]; then
-			echo -e "Error: expected promela file \"$expected_filepath\" not found, skipping." >> $logfile
+			echo -e "Error: expected promela file \"$expected_filepath\" not found, skipping.\n" >> $logfile
 			continue
 		fi
 		expected_filename=(`basename $expected_filepath`)
@@ -89,7 +89,7 @@ do
 		fi
 
 		# Compare output
-		result=(`diff -q $expected_filepath $actual_filename`)
+		result=(`diff -q -bZ $expected_filepath $actual_filename`)
 		if [[ "$result" != "" ]]; then
 			echo -e "*** Expected and actual promela files differ ***" >> $logfile
 			count_failed=$((count_failed+1))
@@ -101,9 +101,9 @@ do
 		fi
 
 		# Clean up artefacts
-		#if [[ -f $actual_filename ]]; then
-		#	rm $actual_filename
-		#fi
+		if [[ -f $actual_filename ]]; then
+			rm $actual_filename
+		fi
 
 		echo >> $logfile
 	done
