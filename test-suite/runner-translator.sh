@@ -33,7 +33,8 @@ fi
 
 # Set up logging
 ts=(`date "+%F-%H-%M-%S"`)
-logdir="$transdir/logs-translator"
+scriptdir=(`dirname ${BASH_SOURCE[0]}`)
+logdir="$scriptdir/logs-translator"
 mkdir -p $logdir
 logfile="$logdir/$ts.log"
 touch $logfile
@@ -68,7 +69,7 @@ do
 		echo -e "Expected promela file found: $expected_filename" >> $logfile
 		count_total=$((count_total+1))
 
-		actual_filename="$transdir/$basename.pml.actual"
+		actual_filename="$scriptdir/$basename.pml.actual"
 
 		# Run program (convert PML to promela)
 		com="./$translator $dir$pml_filename $actual_filename"
@@ -100,9 +101,9 @@ do
 		fi
 
 		# Clean up artefacts
-		if [[ -f $actual_filename ]]; then
-			rm $actual_filename
-		fi
+		#if [[ -f $actual_filename ]]; then
+		#	rm $actual_filename
+		#fi
 
 		echo >> $logfile
 	done

@@ -10,7 +10,7 @@ build:
 
 test:
 	@make build
-	@./test-suite/runner-translator.sh ./test-suite/dummy-exec.sh ./test-suite/translator-inputs
+	@./test-suite/runner-translator.sh ./src/main/translator-xml/PMLToPromela.sh ./test-suite/translator-inputs
 
 install:
 ifdef DESTDIR
