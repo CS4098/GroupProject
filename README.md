@@ -72,8 +72,8 @@ To install the latest version of Apache on Ubuntu use ```sudo apt-get install ap
 First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
 Make sure that the mods-enabled directory contains ```cgid.conf``` and ```cgid.load```
 If not, create a symbolic link to their locations in the mods-available directory:
-*```ln -s /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/```
-*```ln -s /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/```
+* ```ln -s /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/```
+* ```ln -s /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/```
 
 Next, Apache must be told where cgi scripts will be and what they will look like, there are a number of ways of doing this which can be found here: http://httpd.apache.org/docs/2.2/howto/cgi.html
 I used the following method:
