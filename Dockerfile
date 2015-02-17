@@ -6,4 +6,3 @@ RUN apt-get install -y git
 RUN apt-get install -y mercurial
 RUN curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o /bin/spin.gz && gunzip /bin/spin.gz && chmod +x /bin/spin
 RUN apt-get install -y haskell-platform && cabal update
-RUN cd /opt/ && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc && cd pml-bnfc/xml && make
