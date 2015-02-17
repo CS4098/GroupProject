@@ -1,0 +1,14 @@
+bool a;
+bool c;
+bool b;
+bool d;
+
+active proctype abc()
+{
+	a ->
+		b = true;
+	b ->
+		c = true;
+	c ->
+		d = true;
+}
