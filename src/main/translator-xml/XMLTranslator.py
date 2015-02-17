@@ -123,9 +123,17 @@ class XMLTranslator:
     return translation
 
   def translate_xml(self, xml_string):
+    import lxml
+    import sys
     from lxml import etree
-    root = etree.fromstring(xml_string)
-    print etree.tostring(root)
-    print "-------"
+
+    root = None
+    try:
+      root = lxml.etree.fromstring(xml_string)
+    except lxml.etree.XMLSyntaxError:
+      print "Error parsing XML, exiting."
+      sys.exit(1)
+
     translation = self.parse_process(root)
+
     return translation
