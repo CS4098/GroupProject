@@ -52,9 +52,11 @@ Compile BNCF XML generator
 
 
 ## Building
-
 Build the program:
 * ```make build```
+
+To run the project you need to add ```Pmlxml``` to your Path.
+* ```export PATH=$PATH:/opt/pml-bnfc/xml```
 
 Build the program and run unit tests:
 * ```make/make test```
