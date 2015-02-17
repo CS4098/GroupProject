@@ -25,12 +25,6 @@ After Docker has been installed:
 * ```cd groupproject && ./launch.sh```
 * ```cd /opt/group-project```
 
-### Http Server
-Currently the html file can be tested "locally" by changing the action in the form from "python.cgi" to "http://dar.netsoc.ie/group/python.cgi"
-
-To run on an apache server, make sure the config allows for cgi scripts http://httpd.apache.org/docs/2.2/howto/cgi.html
-If the python.cgi file is moved to a cgi-bin directory, change the action in the html form appropriately
-
 =======
 ##### Ubuntu 12.04 Without Docker
 If you wish to install natively on Ubuntu 12.04 without Docker there are several dependencies that must installed.
@@ -67,3 +61,37 @@ Build the program and install to destination:
 
 Clean target directory:
 * ```make clean```
+
+## Running with Web Based UI
+
+### HTTP Server
+A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
+To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
+
+### Enabling CGI
+First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
+Make sure that the mods-enabled directory contains ```cgid.conf``` and ```cgid.load```
+If not, create a symbolic link to their locations in the mods-available directory:
+*```ln -s /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/```
+*```ln -s /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/```
+
+Next, Apache must be told where cgi scripts will be and what they will look like, there are a number of ways of doing this which can be found here: http://httpd.apache.org/docs/2.2/howto/cgi.html
+I used the following method:
+Edit the appropriate file in the sites-enabled folder (such as 000-default), so that after the document root is declared we tell Apache that files ending with .cgi are cgi scripts (/var/www/ may need to be changed if this is not your document root):
+```
+<Directory /var/www/>
+    Options +ExecCGI
+    AddHandler cgi-script .cgi
+</Directory>
+```
+### Moving and changing index.html
+The project folder should be placed below the Apache document root.
+The web app files can be found in src/main/webapp/
+The index.html can be moved to (or symlinked from) the project root directory for url convenience.
+The index.html file should also be checked so that the form action correctly points to the location of the python.cgi script.
+
+The web app can then be used by going to http://{serverIP}/GroupProject/src/main/webapp/
+This url will change if the project is not put at the top of the document root or if directories are renamed or files are moved.
+e.g. http://127.0.0.1/GroupProject/ (if the index.html is moved to the project root directory)
+
+
