@@ -56,7 +56,7 @@ Build the program:
 * ```make build```
 
 To run the project you need to add ```Pmlxml``` to your Path. From the checkout location run:
-* ```export PATH=$PATH:pml-bnfc/xml```
+* ```export PATH=$PATH:$PWD/pml-bnfc/xml```
 
 Build the program and run unit tests:
 * ```make/make test```
