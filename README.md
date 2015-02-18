@@ -35,22 +35,29 @@ Install build tools, curl, mercurial, git
 * ```apt-get install mercurial```
 * ```apt-get install -y git```
 
-Install Spin/Promela,
-* ```curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o /bin/spin.gz && gunzip /bin/spin.gz && chmod +x /bin/spin```
+Python 2.6 or later
+* ```https://www.python.org/downloads/```
+
+Install Spin/Promela
+64-bit Linux:
+* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
+
+32-bit Linux:
+* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
 Install Haskell platform and the BNFC library
 * ```apt-get install -y haskell-platform && cabal update```
 
-Compile BNCF XML generator
-* ```cd /opt/pml-bnfc/xml && make```
+Compile BNCF XML generator. From the checkout location run:
+* ```cd pml-bnfc/xml && make```
 
 
 ## Building
 Build the program:
 * ```make build```
 
-To run the project you need to add ```Pmlxml``` to your Path. From the checkout location run:
-* ```export PATH=$PATH:$PWD/pml-bnfc/xml```
+To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
+* ```export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin```
 
 Build the program and run unit tests:
 * ```make/make test```
