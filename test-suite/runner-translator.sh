@@ -33,7 +33,8 @@ fi
 
 # Set up logging
 ts=(`date "+%F-%H-%M-%S"`)
-logdir="$transdir/logs-translator"
+scriptdir=(`dirname ${BASH_SOURCE[0]}`)
+logdir="$scriptdir/logs-translator"
 mkdir -p $logdir
 logfile="$logdir/$ts.log"
 touch $logfile
@@ -61,14 +62,14 @@ do
 
 		expected_filepath="$dir$basename.pml.expected"
 		if ! [[ -f  $expected_filepath ]]; then
-			echo -e "Error: expected promela file \"$expected_filepath\" not found, skipping." >> $logfile
+			echo -e "Error: expected promela file \"$expected_filepath\" not found, skipping.\n" >> $logfile
 			continue
 		fi
 		expected_filename=(`basename $expected_filepath`)
 		echo -e "Expected promela file found: $expected_filename" >> $logfile
 		count_total=$((count_total+1))
 
-		actual_filename="$transdir/$basename.pml.actual"
+		actual_filename="$scriptdir/$basename.pml.actual"
 
 		# Run program (convert PML to promela)
 		com="./$translator $dir$pml_filename $actual_filename"
@@ -88,7 +89,7 @@ do
 		fi
 
 		# Compare output
-		result=(`diff -q $expected_filepath $actual_filename`)
+		result=(`diff -q -bZ $expected_filepath $actual_filename`)
 		if [[ "$result" != "" ]]; then
 			echo -e "*** Expected and actual promela files differ ***" >> $logfile
 			count_failed=$((count_failed+1))
