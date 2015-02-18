@@ -10,6 +10,8 @@ before_install:
  - travis_retry sudo apt-get update
  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
+ - export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin
+
 
 install:
  - cabal --version
