@@ -5,5 +5,9 @@ python:
 ghc:
   - 7.8
 
+install:
+  - cabal install happy
+  - cabal install alex
+
 script:
   - make test
