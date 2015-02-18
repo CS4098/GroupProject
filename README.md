@@ -36,8 +36,12 @@ If you wish to install natively on Ubuntu 12.04 without Docker there are several
 * ```apt-get install mercurial```
 * ```apt-get install -y git```
 
-#### Python 2.6 or later
+#### Python Dependencies
+Python 2.6 or later
 * ```https://www.python.org/downloads/```
+
+lxml XML parser
+* ```apt-get install python-lxml```
 
 #### Install Spin/Promela
 64-bit Linux:
