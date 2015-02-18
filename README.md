@@ -3,13 +3,13 @@ Project repo for the CS4098 module in Trinity College Dublin
 
 ## Requirements
 
-### Docker
+### Installation With Docker
 
 #### Mac OSX
 
 See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
 
-#### Linux
+#### Linux (64-bit)
 
 ##### Debian
 See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/installation/debian/)
@@ -26,29 +26,29 @@ After Docker has been installed:
 * ```cd /opt/group-project```
 
 =======
-##### Ubuntu 12.04 Without Docker
+### Installation on Ubuntu 12.04 Without Docker
 If you wish to install natively on Ubuntu 12.04 without Docker there are several dependencies that must installed.
 
-Install build tools, curl, mercurial, git
+#### Install build tools, curl, mercurial, git
 * ```apt-get update && apt-get install -y build-essential```
 * ```apt-get install -y curl```
 * ```apt-get install mercurial```
 * ```apt-get install -y git```
 
-Python 2.6 or later
+#### Python 2.6 or later
 * ```https://www.python.org/downloads/```
 
-Install Spin/Promela
+#### Install Spin/Promela
 64-bit Linux:
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
 32-bit Linux:
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
-Install Haskell platform and the BNFC library
+#### Install Haskell platform and the BNFC library
 * ```apt-get install -y haskell-platform && cabal update```
 
-Compile BNCF XML generator. From the checkout location run:
+#### Compile BNCF XML generator. From the checkout location run:
 * ```cd pml-bnfc/xml && make```
 
 
