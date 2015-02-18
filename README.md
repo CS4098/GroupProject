@@ -43,6 +43,9 @@ Python 2.6 or later
 lxml XML parser
 * ```apt-get install python-lxml```
 
+Other dependencies
+* ```pip install -r requirements.txt```
+
 #### Install Spin/Promela
 64-bit Linux:
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
