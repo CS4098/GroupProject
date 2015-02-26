@@ -26,7 +26,7 @@ install:
    else
      travis_retry sudo apt-get install happy alex
    fi
- - travis_retry (cd pml-bnfc/xml && make)
+ - (travis_retry cd pml-bnfc/xml && make)
  - travis_retry mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin
 
 
