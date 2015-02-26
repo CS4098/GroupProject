@@ -1,5 +1,5 @@
 # GroupProject
-[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it2)](https://travis-ci.org/CS4098/GroupProject)
+[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3s)](https://travis-ci.org/CS4098/GroupProject)
 Project repo for the CS4098 module in Trinity College Dublin
 
 ## Requirements
@@ -55,6 +55,7 @@ Other dependencies
 
 #### Install Haskell platform and the BNFC library
 * ```apt-get install -y haskell-platform && cabal update```
+* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
 #### Compile BNCF XML generator. From the checkout location run:
 * ```cd pml-bnfc/xml && make```
