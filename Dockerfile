@@ -1,8 +1,8 @@
 FROM ubuntu:12.04
 MAINTAINER Cathal Geoghegan <geogheca@tcd.ie>
 RUN apt-get update && apt-get install -y build-essential
-RUN apt-get install python-pip
-RUN apt-get install python-lxml
+RUN apt-get install -y python-pip
+RUN apt-get install -y python-lxml
 RUN apt-get install -y curl
 RUN apt-get install -y git
 RUN apt-get install -y mercurial
