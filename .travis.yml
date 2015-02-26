@@ -11,7 +11,7 @@ before_install:
  - travis_retry sudo apt-get update
  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
  - travis_retry sudo apt-get install -y python-pip
- - travis_retry sudo apt-get install -y python-lxml
+ - travis_retry sudo pip install -r requirements.txt
  - travis_retry sudo apt-get install mercurial
  - travis_retry hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc
  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
