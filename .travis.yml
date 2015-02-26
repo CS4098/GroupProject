@@ -31,4 +31,5 @@ install:
 
 
 script:
+  - cd ~ && pwd
   - make test
