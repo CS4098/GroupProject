@@ -2,9 +2,10 @@
 [![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3s)](https://travis-ci.org/CS4098/GroupProject)
 Project repo for the CS4098 module in Trinity College Dublin
 
-## Requirements
+## Development
 
 ### Installation With Docker
+This project has been developed using a docker image running Ubuntu 12.04. To ensure compatibility with the target machine we recommend using docker for development.
 
 #### Mac OSX
 
@@ -22,13 +23,13 @@ After Docker has been installed:
 
 * ```docker pull cs4098/groupproject```
 * ```git clone https://github.com/cs4098/groupproject```
-* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
-* ```cd groupproject && ./launch.sh```
+* ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+* ```./launch.sh```
 * ```cd /opt/group-project```
 
-=======
-### Installation on Ubuntu 12.04 Without Docker
-If you wish to install natively on Ubuntu 12.04 without Docker there are several dependencies that must installed.
+## Requirements
+### Installation on Ubuntu 12.04
+To install natively on Ubuntu 12.04 there are several dependencies that must installed.
 
 #### Install build tools, curl, mercurial, git
 * ```apt-get update && apt-get install -y build-essential```
@@ -57,16 +58,13 @@ Other dependencies
 * ```apt-get install -y haskell-platform && cabal update```
 * ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
-#### Compile BNCF XML generator. From the checkout location run:
-* ```cd pml-bnfc/xml && make```
-
-
 ## Building
-Build the program:
-* ```make build```
-
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
 * ```export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin```
+If you installed Pmlxml or Spin in another directory you will need to modify the above Path to point to the correct directories.
+
+Build the program:
+* ```make build```
 
 Build the program and run unit tests:
 * ```make/make test```
@@ -79,7 +77,7 @@ Clean target directory:
 * ```make clean```
 
 ## Running with Web Based UI
-The process of "Installation Without Docker" above should be done before this section. The project should be placed at the top of the Apache document root.
+The installation process described above should be done before this section. The project should be placed at the top of the Apache document root.
 
 ### HTTP Server
 A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
