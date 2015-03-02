@@ -1,5 +1,6 @@
 # GroupProject
-[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3s)](https://travis-ci.org/CS4098/GroupProject)
+[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3)](https://travis-ci.org/CS4098/GroupProject)
+
 Project repo for the CS4098 module in Trinity College Dublin
 
 ## Development
