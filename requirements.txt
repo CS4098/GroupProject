@@ -1,4 +1,4 @@
 argparse==1.2.1
-lxml==3.4.2
-mercurial==2.0.2
+lxml
 wsgiref==0.1.2
+selenium==2.44.0

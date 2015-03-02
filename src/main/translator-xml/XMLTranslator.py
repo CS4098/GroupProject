@@ -76,12 +76,13 @@ class XMLTranslator:
 
   # PML sequence
   def handle_sequence(self, node, depth, processes_sofar, process_current, resources_sofar):
-    pass
+    self.parse_nodes(node, depth, processes_sofar, process_current, resources_sofar)
 
   constructs = {
     "PrimAct" : handle_action,
     "PrimIter" : handle_iteration,
-    "PrimSeq" : handle_sequence
+    "PrimSeq" : handle_sequence,
+    "PrimTask" : handle_sequence
     # More..
   }
   # Parse non-Process node of the XML file
