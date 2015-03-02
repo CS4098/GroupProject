@@ -81,7 +81,8 @@ class XMLTranslator:
   constructs = {
     "PrimAct" : handle_action,
     "PrimIter" : handle_iteration,
-    "PrimSeq" : handle_sequence
+    "PrimSeq" : handle_sequence,
+    "PrimTask" : handle_sequence
     # More..
   }
   # Parse non-Process node of the XML file
