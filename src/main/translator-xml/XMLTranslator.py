@@ -76,7 +76,7 @@ class XMLTranslator:
 
   # PML sequence
   def handle_sequence(self, node, depth, processes_sofar, process_current, resources_sofar):
-    pass
+    self.parse_nodes(node, depth, processes_sofar, process_current, resources_sofar)
 
   constructs = {
     "PrimAct" : handle_action,
