@@ -11,6 +11,7 @@ build:
 test:
 	@make build
 	@./test-suite/runner-translator.sh ./src/main/translator-xml/PMLToPromela.sh ./test-suite/translator-inputs
+	@./src/test/UITest/runtest.sh
 
 install:
 ifdef DESTDIR
