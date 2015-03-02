@@ -1,0 +1,4 @@
+process test {
+	sequence one {
+	}
+}
