@@ -15,8 +15,7 @@ class uiTest(unittest.TestCase):
         #driver.get("http://127.0.0.1/GroupProject/src/main/webapp/index.html")
 
         inputForm = driver.find_element_by_name("pmlfile")
-        #inputForm.send_keys("test.pml")
-        inputForm.send_keys("src/test/UITest/test.pml")
+        inputForm.send_keys("src/test/uitest/test.pml")
         inputForm.submit()
 
         test = driver.find_element_by_id('output')
