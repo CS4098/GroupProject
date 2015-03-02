@@ -8,6 +8,7 @@ msg_fail="FAIL"
 msg_pass="PASS"
 msg_fail_con=$red$msg_fail$default
 msg_pass_con=$green$msg_pass$default
+TEST_STATUS=0
 
 # Check number of parameters
 if [[ "$#" -ne 2 ]]; then
@@ -115,3 +116,5 @@ summary="\nRESULTS: Total: $count_total, Failures: $count_failed"
 echo -e $summary >> $logfile
 echo -e $summary
 echo -e "Log available at: $logfile\n"
+
+exit $count_failed

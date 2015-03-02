@@ -16,13 +16,21 @@ if "pmlfile" not in form:
     print("<H1>Error</H1>")
     print("Please fill in the name and file fields.")
 else:
-    #currently: saves input file with random filename, passes file to file.sh which outputs the contents, deletes file
+    #currently: saves input file with random filename, passes file to PMLToPromela.sh and outputs the result, then passes through spin and outputs the result, deletes files when finished
+
     pmlfile = form["pmlfile"]
+    #print("<p>file from form: ")    
+    #print(pmlfile)
+
     filename = ""
+    promelafile = ""
+
+    #handle input
     if pmlfile.file:
-        filename = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
-        filename = ''.join([filename, ".pml"])
-        print("filename: ")
+        basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
+        filename = ''.join([basefile, ".pml"])
+        promelafile = ''.join(["./", basefile, ".promela"])
+        print("<p>filename: ")
         print(filename)
         print("<p>created by user: ")
         print(getpass.getuser())
@@ -32,10 +40,36 @@ else:
             if not line: break
             outfile.write(line)
         outfile.close()
+
     print("<br><br><p>")
-    process = subprocess.Popen(["./file.sh", filename], stdout=subprocess.PIPE)
+    process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile], stdout=subprocess.PIPE)
     process.wait()
     for line in process.stdout:
         print(line)
+
+    readpml = open(filename, "r")
+    print("<p>PML Input:<p><pre>")
+    print(readpml.read())
+    print("</pre>")
+    readpml.close()
+
+    readpromela = open(promelafile, "r")
+    print("<p>Generated Promela:<p><pre>")
+    print(readpromela.read())
+    print("</pre>")
+    readpromela.close()
+
+    spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
+    spin.wait()
+    print("<p>Spin output:<p><pre>")
+    for line in spin.stdout:
+        print(line)
+    print("</pre>")
+
     os.remove(filename)
+    os.remove(promelafile)
     
+
+
+
+

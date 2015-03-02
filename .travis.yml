@@ -5,15 +5,19 @@ python:
 env:
   - CABALVER=1.18 GHCVER=7.8.3
 
+virtualenv:
+  system_site_packages: true
+
 before_install:
+ - travis_retry sudo apt-get update && sudo apt-get install -y build-essential
  - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
  - travis_retry sudo apt-get update
  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
- - travis_retry sudo apt-get install python-lxml
- - travis_retry sudo pip install -r requirements.txt
+ - travis_retry sudo apt-get install -y python-setuptools libxml2 libxslt1-dev python-dev
+ - travis_retry sudo apt-get install mercurial
+ - travis_retry hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc
  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
  - export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin
-
 
 install:
  - cabal --version
@@ -26,6 +30,10 @@ install:
    else
      travis_retry sudo apt-get install happy alex
    fi
+ - (travis_retry cd pml-bnfc/xml && make)
+ - travis_retry mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin
+ - pip install lxml
 
 script:
-  - make test
+  - make build
+  - ./test-suite/runner-translator.sh ./src/main/translator-xml/PMLToPromela.sh ./test-suite/translator-inputs
