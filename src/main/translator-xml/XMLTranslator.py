@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import lxml
+import sys
+from lxml import etree
 
 class XMLTranslator:
 
@@ -7,7 +10,8 @@ class XMLTranslator:
             "PrimAct": self.handle_action,
             "PrimIter": self.handle_iteration,
             "PrimSeq": self.handle_sequence,
-            "PrimTask": self.handle_sequence
+            "PrimTask": self.handle_sequence,
+            "PrimSeln": self.handle_selection
             # More..
         }
 
@@ -130,12 +134,23 @@ class XMLTranslator:
 
     # PML selection
     def handle_selection(self, node, depth, processes_sofar, process_current, resources_sofar):
+        if_block = False
+        curdepth = depth
+        line = self.get_indent(curdepth)
+        for child_node in node.iterchildren():
+            if child_node.tag in self.constructs:
+                if not if_block:
+                    if_block = not if_block
+                    process_current.append(line + "if")
+                process_current.append(line + ":: true ->")
+                temp_root = etree.Element(child_node.tag)
+                temp_root.insert(0, child_node)
+                self.parse_nodes(temp_root, depth+1, processes_sofar, process_current, resources_sofar)
+        if if_block:
+            process_current.append(line + "fi")
         pass
 
     def translate_xml(self, xml_string):
-        import lxml
-        import sys
-        from lxml import etree
 
         root = None
         try:
