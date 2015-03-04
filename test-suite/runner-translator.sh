@@ -38,6 +38,7 @@ scriptdir=(`dirname ${BASH_SOURCE[0]}`)
 logdir="$scriptdir/logs-translator"
 mkdir -p $logdir
 logfile="$logdir/$ts.log"
+predemptyfile="$scriptdir/pred.promela"
 touch $logfile
 
 echo ""
@@ -73,7 +74,7 @@ do
 		actual_filename="$scriptdir/$basename.pml.actual"
 
 		# Run program (convert PML to promela)
-		com="./$translator $dir$pml_filename $actual_filename"
+		com="./$translator $dir$pml_filename $actual_filename $predemptyfile"
 		echo -e "Running test: $basename... " >> $logfile
 		echo -n "Running test: $basename... "
 		echo -e "-------" >> $logfile
