@@ -39,6 +39,7 @@ logdir="$scriptdir/logs-translator"
 mkdir -p $logdir
 logfile="$logdir/$ts.log"
 predemptyfile="$scriptdir/pred.promela"
+touch $predemptyfile
 touch $logfile
 
 echo ""
@@ -110,6 +111,11 @@ do
 		echo >> $logfile
 	done
 done
+
+# Clean dummy predicate file
+if [[ -f $predemptyfile ]]; then
+	rm $predemptyfile
+fi
 
 # Print summary to file and console
 count_succeeded=$(($count_total-$count_failed))
