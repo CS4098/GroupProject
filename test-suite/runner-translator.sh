@@ -91,7 +91,7 @@ do
 		fi
 
 		# Compare output
-		result=(`diff -q -bZ $expected_filepath $actual_filename`)
+		result=(`diff -q -bBZ $expected_filepath $actual_filename`)
 		if [[ "$result" != "" ]]; then
 			echo -e "*** Expected and actual promela files differ ***" >> $logfile
 			count_failed=$((count_failed+1))
