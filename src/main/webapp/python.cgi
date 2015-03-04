@@ -18,12 +18,15 @@ if "pmlfile" not in form:
 else:
     #currently: saves input file with random filename, passes file to PMLToPromela.sh and outputs the result, then passes through spin and outputs the result, deletes files when finished
 
-    never = form["never"].value
-    if never == "on":
+    canneda = form["canneda"].value
+    if canneda == "on":
         print("<p>")
-        print("You've chosen to use the Non Progressing Cycles predicate. This might do something soon.")
+        print("You've picked a canned predicate!")
 
     pmlfile = form["pmlfile"]
+    resourcea = form["resourcea"]
+    resourceb = form["resourceb"]
+
     #print("<p>file from form: ")    
     #print(pmlfile.filename)
 
@@ -32,6 +35,12 @@ else:
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
+        predicatefilename = "pred.promela"
+        predicatefile = open(predicatefile, 'w')
+        predicatefile.write("\n\n");
+        if canneda = "on":
+            predicatefile.write("never {\n    do\n    :: " + resourcea + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + resourceb + "\n    od\n}")
+
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
             filename = ''.join([basefile, ".pml"])
@@ -49,7 +58,7 @@ else:
         outfile.close()
 
         print("<br><br><p>")
-        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile], stdout=subprocess.PIPE)
+        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, predicatefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
             print(line)

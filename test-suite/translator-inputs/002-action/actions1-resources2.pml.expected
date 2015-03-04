@@ -6,3 +6,5 @@ active proctype test_action()
 	a ->
 		b = true;
 }
+
+

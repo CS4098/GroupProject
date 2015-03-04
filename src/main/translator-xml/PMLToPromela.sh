@@ -1,7 +1,8 @@
 #!/bin/bash
 
-usage="Usage: $0 <path-to-input-PML-file> <path-to-output-Promela-file>"
+usage="Usage: $0 <path-to-input-PML-file> <path-to-output-Promela-file> <path-to-predicate-file>"
 xmltmp="pmltopromela_tmp.xml"
+promelatmp="promela_tmp.promela"
 
 # Determine paths of python components
 scriptdir=(`dirname ${BASH_SOURCE[0]}`)
@@ -20,7 +21,7 @@ if ! [[ -x $xmltopromela ]] && ! [[ -f $xmltopromela ]]; then
 fi
 
 # Check number of parameters
-if [[ "$#" -ne 2 ]]; then
+if [[ "$#" -ne 3 ]]; then
 	echo $usage
 	exit 1
 fi
@@ -40,9 +41,16 @@ fi
 
 # Run translators
 python $pmltoxml -p $pmlfile -x $xmltmp
-python $xmltopromela -x $xmltmp -p $promelafile
+python $xmltopromela -x $xmltmp -p $promelatmp
+
+predicatefile=$3
+cat $promelatmp $predicatefile > $promelafile
 
 # Clean temporaries
 if [[ -f $xmltmp ]]; then
 	rm $xmltmp
+fi
+
+if [[ -f $promelatmp ]]; then
+	rm $promelatmp
 fi
