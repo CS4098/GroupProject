@@ -12,7 +12,7 @@ cgitb.enable()
 print("Content-type: text/html;charset=utf-8\n\n\n")
 
 form = cgi.FieldStorage()
-if "pmlfile" not in form:
+if "pmlfile" not in form or "canneda" not in form:
     print("<H1>Error</H1>")
     print("Please fill in the file field.")
 else:
@@ -38,7 +38,7 @@ else:
         predicatefilename = "pred.promela"
         predicatefile = open(predicatefile, 'w')
         predicatefile.write("\n\n");
-        if canneda = "on":
+        if canneda == "on":
             predicatefile.write("never {\n    do\n    :: " + resourcea + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + resourceb + "\n    od\n}")
 
         while 1:
