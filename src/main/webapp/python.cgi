@@ -19,7 +19,7 @@ else:
     #currently: saves input file with random filename, passes file to PMLToPromela.sh and outputs the result, then passes through spin and outputs the result, deletes files when finished
 
     canneda = ""
-    if "canneda" is in form:
+    if "canneda" in form:
         canneda = "on"
     if canneda == "on":
         print("<p>")
