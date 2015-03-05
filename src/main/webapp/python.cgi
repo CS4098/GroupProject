@@ -41,7 +41,7 @@ else:
         predicatefile = open(predicatefilename, 'w')
         predicatefile.write("\n\n");
         if canneda == "on":
-            predicatefile.write("never {\n    do\n    :: " + resourcea + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + resourceb + "\n    od\n}")
+            predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
 
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
