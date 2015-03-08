@@ -38,6 +38,8 @@ scriptdir=(`dirname ${BASH_SOURCE[0]}`)
 logdir="$scriptdir/logs-translator"
 mkdir -p $logdir
 logfile="$logdir/$ts.log"
+predemptyfile="$scriptdir/pred.promela"
+touch $predemptyfile
 touch $logfile
 
 echo ""
@@ -73,7 +75,7 @@ do
 		actual_filename="$scriptdir/$basename.pml.actual"
 
 		# Run program (convert PML to promela)
-		com="./$translator $dir$pml_filename $actual_filename"
+		com="./$translator $dir$pml_filename $actual_filename $predemptyfile"
 		echo -e "Running test: $basename... " >> $logfile
 		echo -n "Running test: $basename... "
 		echo -e "-------" >> $logfile
@@ -90,7 +92,7 @@ do
 		fi
 
 		# Compare output
-		result=(`diff -q -bZ $expected_filepath $actual_filename`)
+		result=(`diff -q -bBZ $expected_filepath $actual_filename`)
 		if [[ "$result" != "" ]]; then
 			echo -e "*** Expected and actual promela files differ ***" >> $logfile
 			count_failed=$((count_failed+1))
@@ -109,6 +111,11 @@ do
 		echo >> $logfile
 	done
 done
+
+# Clean dummy predicate file
+if [[ -f $predemptyfile ]]; then
+	rm $predemptyfile
+fi
 
 # Print summary to file and console
 count_succeeded=$(($count_total-$count_failed))
