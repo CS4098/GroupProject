@@ -1,7 +1,8 @@
 # GroupProject
 [![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3)](https://travis-ci.org/CS4098/GroupProject)
 
-Project repo for the CS4098 module in Trinity College Dublin
+Project repo for the CS4098 module in Trinity College Dublin. The purpose of this project is to build a model checker for the PML (process modelling language).
+
 
 ## Development
 
@@ -70,10 +71,6 @@ Build the program:
 Build the program and run unit tests:
 * ```make/make test```
 
-Build the program and install to destination:
-* ```export DESTDIR=<path-to-destination>```
-* ```make install```
-
 Clean target directory:
 * ```make clean```
 
@@ -111,3 +108,18 @@ The PATH used by Apache also needs to updated to include spin and the bnfc trans
 * ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin```
 
 Apache will then have to be restarted to enable access.
+
+### Testing
+To run all of the project test run ```make test``` from the project root directory. 
+To test each of the features individually a valid PML file can be uploaded to the apache webserver.
+Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
+From there you will be presented with a form where you can upload a pml file. There is also the option to select canned predicates.
+To use the canned predicates, fill in the required fields and select the checkbox to the side of the predicate.
+Click submit to be presented with the output of the program.
+The following webpage should contain the inputed pml file, the generated promela code and then the output from running Spin.
+So far the following have been implemented and can be tested;
+* Processes
+* Actions
+* Sequence 
+* Canned Predicates
+
