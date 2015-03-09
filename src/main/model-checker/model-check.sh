@@ -4,6 +4,9 @@
 
 usage="Usage: $0 <path-to-input-Promela-file> <path-to-Spin-output-file> [verify]"
 spin="spin"
+pan="pan"
+cc="gcc"
+ccopt="-O2"
 
 # Check number of parameters
 if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]]; then
@@ -32,25 +35,25 @@ elif [[ "$3" == "verify" ]]; then
 	# Run Spin in verification mode
 	$spin -a $promelafile
 
-	if ! [[ -f "pan.c" ]]; then
-		echo "Error: no pan.c file generated, exiting."
+	if ! [[ -f "$pan.c" ]]; then
+		echo "Error: file $pan.c not generated, exiting."
 		exit 1
 	fi
 
-	gcc -O2 -DSAFETY -o pan pan.c
+	$cc $ccopt -DSAFETY -o $pan $pan.c # FIXME: is DSAFETY appropriate here?
 
 	if ! [[ -x "pan" ]]; then
-		echo "Error: no pan executable generated, exiting."
+		echo "Error: executable $pan not generated, exiting."
 		exit 1
 	fi
 
-	./pan > $outputfile 2>&1
+	./$pan > $outputfile 2>&1
 
 	# Clean temporaries relating to verification mode
-	rm pan.? pan
+	rm -f $pan.? $pan
 
 	# FIXME: maybe do something with the trail files later; for now, erase this artefact
 	if [[ -f $promelafile.trail ]]; then
-		rm $promelafile.trail
+		rm -f $promelafile.trail
 	fi
 fi
