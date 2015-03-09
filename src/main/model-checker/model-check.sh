@@ -2,13 +2,8 @@
 
 # Run Spin in test or verification mode; runs in test (single-path) mode by default
 
-usage="Usage: $0 <path-to-input-PML-file> <path-to-Spin-output-file> [verify]"
-promelatmp="modeltest_tmp.promela"
+usage="Usage: $0 <path-to-input-Promela-file> <path-to-Spin-output-file> [verify]"
 spin="spin"
-
-# Determine path of PML-to-Promela script
-scriptdir=(`dirname ${BASH_SOURCE[0]}`)
-pmltopromela="$scriptdir/../translator-xml/PMLToPromela.sh"
 
 # Check number of parameters
 if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]]; then
@@ -17,9 +12,9 @@ if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]]; then
 fi
 
 # Check parameters
-pmlfile=$1
-if ! [[ -f $pmlfile ]]; then
-	echo "$usage: given path to input PML file does not exist or is not a regular file."
+promelafile=$1
+if ! [[ -f $promelafile ]]; then
+	echo "$usage: given path to input Promela file does not exist or is not a regular file."
 	exit 1
 fi
 
@@ -29,21 +24,13 @@ if ! [[ -d $outputdir ]]; then
 	mkdir -p $outputdir
 fi
 
-# Run translator
-$pmltopromela $pmlfile $promelatmp
-
-if ! [[ -f $promelatmp ]]; then
-	echo "Error: no Promela file created, exiting."
-	exit 1
-fi
-
 if [[ "$#" == 2 ]]; then
 	# Run Spin in test mode
-	$spin $promelatmp > $outputfile 2>&1
+	$spin $promelafile > $outputfile 2>&1
 
 elif [[ "$3" == "verify" ]]; then
 	# Run Spin in verification mode
-	$spin -a $promelatmp
+	$spin -a $promelafile
 
 	if ! [[ -f "pan.c" ]]; then
 		echo "Error: no pan.c file generated, exiting."
@@ -63,10 +50,7 @@ elif [[ "$3" == "verify" ]]; then
 	rm pan.? pan
 
 	# FIXME: maybe do something with the trail files later; for now, erase this artefact
-	if [[ -f $promelatmp.trail ]]; then
-		rm $promelatmp.trail
+	if [[ -f $promelafile.trail ]]; then
+		rm $promelafile.trail
 	fi
 fi
-
-# Clean common temporaries
-rm $promelatmp
