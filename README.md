@@ -109,7 +109,32 @@ The PATH used by Apache also needs to updated to include spin and the bnfc trans
 
 Apache will then have to be restarted to enable access.
 
-### Testing
+## Running from Command-Line
+
+PML files are internally translated into Promela code. Promela is the language used by Spin, a model-checker. The configuration provided here returns the output from Spin, and also makes available the intermediate Promela representation.
+
+To be able to run commands easily, first adjust ```PATH``` from the checkout location:
+* ```export PATH=$PATH:$PWD/src/main/translator-xml:$PWD/src/main/model-checker```
+
+### Translating PML to Promela
+
+```PMLToPromela.sh <path-to-input-PML-file> <path-to-output-Promela-file> <path-to-predicate-file>```
+
+where
+* ```<path-to-input-PML-file>``` is the input PML file.
+* ```<path-to-output-Promela-file>``` is the desired target Promela file; if file already exists, the script will over-write it.
+* ```<path-to-predicate-file>``` is the predicate file.
+
+### Running the model-checker
+
+```model-check.sh <path-to-input-Promela-file> <path-to-Spin-output-file> [verify]```
+
+where
+* ```<path-to-input-Promela-file>``` is the input Promela file.
+* ```<path-to-Spin-output-file>``` is the target file where Spin output is to be redirected to; if the file already exists, the script will over-write it.
+* ```[verify]``` specifies that Spin is to be run in Verification mode. By default, Spin is run in Test mode, where only a single possible path of execution is run. Running Spin in Verification mode allows the testing of claims against all possible program states.
+
+## Testing
 To run all of the project test run ```make test``` from the project root directory. 
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
