@@ -67,21 +67,27 @@ else:
 
         readpml = open(filename, "r")
         print("<p>PML Input:<p><pre>")
+        print("<div id='pml'>")
         print(readpml.read())
+        print("</div>")
         print("</pre>")
         readpml.close()
 
         readpromela = open(promelafile, "r")
         print("<p>Generated Promela:<p><pre>")
+        print("<div id='promela'>")
         print(readpromela.read())
+        print("</div>")
         print("</pre>")
         readpromela.close()
 
         spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
         spin.wait()
         print("<p>Spin output:<p><pre>")
+        print("<div id='spin'>")
         for line in spin.stdout:
             print(line)
+        print("</div>")
         print("</pre>")
 
         os.remove(filename)
