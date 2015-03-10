@@ -5,7 +5,6 @@ echo " SELENIUM WEBDRIVER TESTS"
 echo "-------------------------------------------------------"
 count_failed=0
 
-#(java -jar ./src/test/uitest/selenium-server-standalone-2.43.1.jar 2>&1 | grep -v "INFO" ) &
 echo "Starting up Selenium server..."
 java -jar ./src/test/uitest/selenium-server-standalone-2.43.1.jar &
 sleep 5
