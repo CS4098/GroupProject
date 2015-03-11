@@ -51,6 +51,14 @@ print("<p>Spin output:<p><pre>")
 print("<div id='spin'>")
 for line in spin.stdout:
     print(line)
+#output spin results
+    readspin = open(spinfile, "r")
+    print("<p>Spin output:<p><pre>")
+    print("<div id='spin'>")
+    print(readspin.read())
+    print("</div>")
+    print("</pre>")
+    readspin.close()
 print("</div>")
 print("</pre>")
 
