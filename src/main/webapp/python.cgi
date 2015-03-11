@@ -67,10 +67,18 @@ else:
 
         #print("<br><br><p>")
         #run process to translate input pml to promela
+        pmlcheck = 0
         process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, predicatefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
+            if line:
+                pmlcheck = 1
+            print("<p>")
             print(line)
+        
+        if pmlcheck:
+            print("<br><p><b>pml was not valid :(</b>")
+            raise SystemExit
 
         #output input pml
         readpml = open(filename, "r")
@@ -94,6 +102,7 @@ else:
         spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
         spin.wait()
         for line in spin.stdout:
+            print("<p>")
             print(line)
 
         #output spin results
