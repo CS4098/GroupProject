@@ -25,7 +25,9 @@ def translate_xml_file(xml_file, resource_file, promela_file):
         # Read XML file
         for line in translation[0]:
             resource_file.write(line)
+            if line is not "": promela_file.write('bool ' + line.replace(",", "") + ';\n')
         resource_file.close()
+        promela_file.write('\n')
 
         for line in translation[1]:
             promela_file.write(line + '\n')

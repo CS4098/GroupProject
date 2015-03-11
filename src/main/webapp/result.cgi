@@ -15,6 +15,7 @@ print("Content-type: text/html;charset=utf-8\n\n\n")
 form = cgi.FieldStorage()
 
 promelafile = form.getvalue("promelafile")
+spinfile = promelafile + ".spin"
 resourcefilename = form.getvalue("resourcefile")
 
 lines = []
@@ -27,8 +28,13 @@ for resource in resourcelist[0]:
         lines.append("bool " + resource + " = " + form.getvalue(resource) + ";")
 
 with open(promelafile, "r") as f:
-    for line in f:
-        lines.append(line)
+    base_promela = f.read()
+    base_promela = base_promela.split("\n\n")
+    if len(base_promela) is 2:
+        base_promela = base_promela[1]
+    else:
+        base_promela = base_promela[0]
+    lines.append(base_promela)
 
 open(promelafile, "w").close()
 promela = open(promelafile, "w")
@@ -39,12 +45,20 @@ promela.close()
 
 
 
-spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
+spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
 spin.wait()
 print("<p>Spin output:<p><pre>")
 print("<div id='spin'>")
 for line in spin.stdout:
     print(line)
+#output spin results
+readspin = open(spinfile, "r")
+print("<p>Spin output:<p><pre>")
+print("<div id='spin'>")
+print(readspin.read())
+print("</div>")
+print("</pre>")
+readspin.close()
 print("</div>")
 print("</pre>")
 
