@@ -159,7 +159,7 @@ Empty Process:
 process test {
 }
 ```
-Produces spin output in which all states are reached. This verifies that all state in the pml process can be reached.
+Produces spin output in which all states are reached. This verifies that all states in the pml process can be reached.
 
 ### Actions
 
@@ -172,7 +172,7 @@ process test_action {
     }
 }
 ```
-Produces spin output in which there is an invalid end state. As the act action requires "a" and "a" is never provided by any other action then the act action cannot be completed.
+Produces spin output in which there is an invalid end state. As the "act" action requires "a" and "a" is never provided by any other action the "act" action cannot be completed.
 
 All actions reachable:
 ```
