@@ -47,8 +47,8 @@ else:
             if not os.path.exists(filename): break
         
         spinfile = ''.join([basefile, ".spin"])
-        promelafile = ''.join([basefile, ".promela"]
-        resourcefilename = ''.join([basefile, ".csv"]
+        promelafile = ''.join([basefile, ".promela"])
+        resourcefilename = ''.join([basefile, ".csv"])
 
         #print("<p>filename: ")
         #print(filename)
