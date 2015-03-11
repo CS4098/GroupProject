@@ -34,6 +34,7 @@ else:
 
     filename = ""
     promelafile = ""
+    spinfile = ""
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
@@ -42,16 +43,21 @@ else:
         predicatefile.write("\n\n");
         if canneda == "on":
             predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
-
+        #generate random filename for saving files
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
             filename = ''.join([basefile, ".pml"])
             if not os.path.exists(filename): break
-        promelafile = ''.join(["./", basefile, ".promela"])
+        
+        spinfile = ''.join([basefile, ".spin"])
+        promelafile = ''.join([basefile, ".promela"])
+
         #print("<p>filename: ")
         #print(filename)
         #print("<p>created by user: ")
         #print(getpass.getuser())
+
+        #save input file to local temp file
         outfile = open(filename, "w")
         while 1:
             line = pmlfile.file.readline()
@@ -59,12 +65,14 @@ else:
             outfile.write(line)
         outfile.close()
 
-        print("<br><br><p>")
+        #print("<br><br><p>")
+        #run process to translate input pml to promela
         process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, predicatefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
             print(line)
 
+        #output input pml
         readpml = open(filename, "r")
         print("<p>PML Input:<p><pre>")
         print("<div id='pml'>")
@@ -73,6 +81,7 @@ else:
         print("</pre>")
         readpml.close()
 
+        #output generated promela
         readpromela = open(promelafile, "r")
         print("<p>Generated Promela:<p><pre>")
         print("<div id='promela'>")
@@ -81,18 +90,25 @@ else:
         print("</pre>")
         readpromela.close()
 
-        spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
+        #run spin in verify mode on generated promela file
+        spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
         spin.wait()
-        print("<p>Spin output:<p><pre>")
-        print("<div id='spin'>")
         for line in spin.stdout:
             print(line)
+
+        #output spin results
+        readspin = open(spinfile, "r")
+        print("<p>Spin output:<p><pre>")
+        print("<div id='spin'>")
+        print(readspin.read())
         print("</div>")
         print("</pre>")
+        readspin.close()
 
+        #delete temp files
         os.remove(filename)
         os.remove(promelafile)
-    
+        os.remove(spinfile)
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
