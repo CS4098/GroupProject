@@ -29,8 +29,7 @@ for resource in resourcelist[0]:
 with open(promelafile, "r") as f:
     base_promela = f.read()
     base_promela = base_promela.split("\n\n")[1]
-    for line in base_promela:
-        lines.append(line)
+    lines.append(base_promela)
 
 open(promelafile, "w").close()
 promela = open(promelafile, "w")
