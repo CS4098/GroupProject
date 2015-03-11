@@ -23,9 +23,10 @@ lines = []
 readresources = open(resourcefilename, "r")
 csvreader = csv.reader(readresources)
 resourcelist = list(csvreader)
-for resource in resourcelist[0]:
-    if resource in form:
-        lines.append("bool " + resource + " = " + form.getvalue(resource) + ";")
+if len(resourcelist) > 0:
+    for resource in resourcelist[0]:
+        if resource in form:
+            lines.append("bool " + resource + " = " + form.getvalue(resource) + ";")
 
 with open(promelafile, "r") as f:
     base_promela = f.read()
