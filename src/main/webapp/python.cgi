@@ -109,10 +109,11 @@ else:
         print "<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>"
         csvreader = csv.reader(readresources)
         resourcelist = list(csvreader)
-        for resource in resourcelist[0]:
-            print "<i>" + resource + "</i>"
-            print "<input type='radio' name=" + resource + " value='true'>True"
-            print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
+        if len(resourcelist) > 0:
+            for resource in resourcelist[0]:
+                print "<i>" + resource + "</i>"
+                print "<input type='radio' name=" + resource + " value='true'>True"
+                print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
         print "<input name='resourcefile' type='hidden' value=\"" + resourcefilename + "\">"
         print "<input name='promelafile' type='hidden' value=\"" + promelafile + "\">"
         print "<input name='spinfile' type='hidden' value=\"" + spinfile + "\">"
