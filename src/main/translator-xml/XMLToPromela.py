@@ -25,12 +25,12 @@ def translate_xml_file(xml_file, resource_file, promela_file):
         # Read XML file
         for line in translation[0]:
             resource_file.write(line)
-            print(line)
+            #print(line)
         resource_file.close()
 
         for line in translation[1]:
             promela_file.write(line + '\n')
-            print(line)
+            #print(line)
         promela_file.close()
 
     except IOError:
