@@ -27,7 +27,9 @@ for resource in resourcelist[0]:
         lines.append("bool " + resource + " = " + form.getvalue(resource) + ";")
 
 with open(promelafile, "r") as f:
-    for line in f:
+    base_promela = f.read()
+    base_promela = base_promela.split("\n\n")[1]
+    for line in base_promela:
         lines.append(line)
 
 open(promelafile, "w").close()
