@@ -12,6 +12,13 @@ cgitb.enable()
 #html header
 print("Content-type: text/html;charset=utf-8\n\n\n")
 
+print("<html>")
+print("<head>")
+print("<title>CGI Result</title>")
+print("<link rel=\"stylesheet\" href=\"../../../css/layout.css\" type=\"text/css\">")
+print("</head>")
+print("<body>")
+
 form = cgi.FieldStorage()
 if "pmlfile" not in form:
     print("<H1>Error</H1>")
@@ -120,3 +127,6 @@ else:
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
+
+print("</body>")
+print("</html>")
