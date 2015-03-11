@@ -32,6 +32,7 @@ else:
 
     filename = ""
     promelafile = ""
+    spinfile = ""
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
@@ -40,30 +41,43 @@ else:
         #predicatefile.write("\n\n");
         #if canneda == "on":
         #    predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
-
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
             filename = ''.join([basefile, ".pml"])
             if not os.path.exists(filename): break
-                
-        promelafile = ''.join(["./", basefile, ".promela"])
+        
+        spinfile = ''.join([basefile, ".spin"])
+        promelafile = ''.join([basefile, ".promela"]
+        resourcefilename = ''.join([basefile, ".csv"]
+
         #print("<p>filename: ")
         #print(filename)
         #print("<p>created by user: ")
         #print(getpass.getuser())
-        outfile = open(filename, "w")
+
+        #save input file to local temp file
+        #outfile = open(filename, "w")
         while 1:
             line = pmlfile.file.readline()
             if not line: break
             outfile.write(line)
         outfile.close()
 
-        print("<br><br><p>")
+        #run process to translate input pml to promela
+        pmlcheck = 0
         process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, resourcefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
+            if line:
+                pmlcheck = 1
+            print("<p>")
             print(line)
+        
+        #if pmlcheck:
+            print("<br><p><b>pml was not valid :(</b>")
+            raise SystemExit
 
+        #output input pml
         readpml = open(filename, "r")
         print("<p>PML Input:<p><pre>")
         print("<div id='pml'>")
@@ -72,6 +86,7 @@ else:
         print("</pre>")
         readpml.close()
 
+        #output generated promela
         readpromela = open(promelafile, "r")
         print("<p>Generated Promela:<p><pre>")
         print("<div id='promela'>")
@@ -80,6 +95,7 @@ else:
         print("</div>")
         print("</pre>")
         readpromela.close()
+
 
         readresources = open(resourcefilename, "r")
         print "<b>Select starting values for resources</b>"
@@ -92,24 +108,15 @@ else:
             print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
         print "<input name='resourcefile' type='hidden' value=\"" + resourcefilename + "\">"
         print "<input name='promelafile' type='hidden' value=\"" + promelafile + "\">"
+        print "<input name='spinfile' type='hidden' value=\"" + spinfile + "\">"
         print "<input type='submit' value='Submit'>"
 
         print "</form>"
         readresources.close()
 
 
-        spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
-        spin.wait()
-        print("<p>Spin output:<p><pre>")
-        print("<div id='spin'>")
-        for line in spin.stdout:
-            print(line)
-        print("</div>")
-        print("</pre>")
-
+        #delete temp files
         os.remove(filename)
-
-    
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")

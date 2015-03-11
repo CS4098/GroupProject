@@ -151,3 +151,64 @@ So far the following have been implemented and can be tested;
 * Sequence 
 * Canned Predicates
 
+### Process
+To test process an empty pml process can be passsed to the model checker
+
+Empty Process:
+```
+process test {
+}
+```
+Produces spin output in which all states are reached. This verifies that all states in the pml process can be reached.
+
+### Actions
+
+Unreachable action:
+```
+process test_action {
+    action act {
+	requires { a }
+	provides { a }
+    }
+}
+```
+Produces spin output in which there is an invalid end state. As the "act" action requires "a" and "a" is never provided by any other action the "act" action cannot be completed.
+
+All actions reachable:
+```
+process abc {
+    action a {
+	provides { b }
+    }
+    action b {
+	requires { b }
+	provides { c }
+    }
+    action c {
+	requires { c }
+	provides { d }
+    }
+}
+```
+Produces spin output in which all states are reached.
+
+Some actions reachable and some not:
+```
+process abc {
+    action a {
+	provides { b }
+    }
+    action b {
+	requires { b }
+	provides { c }
+    }
+    action c {
+	requires { a }
+	provides { d }
+    }
+}
+```
+Produces spin output which has failed as action c is unreachable in the the pml file.
+
+
+
