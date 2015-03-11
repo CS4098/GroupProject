@@ -1,7 +1,8 @@
 # GroupProject
 [![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3)](https://travis-ci.org/CS4098/GroupProject)
 
-Project repo for the CS4098 module in Trinity College Dublin
+Project repo for the CS4098 module in Trinity College Dublin. The purpose of this project is to build a model checker for the PML (process modelling language).
+
 
 ## Development
 
@@ -70,10 +71,6 @@ Build the program:
 Build the program and run unit tests:
 * ```make/make test```
 
-Build the program and install to destination:
-* ```export DESTDIR=<path-to-destination>```
-* ```make install```
-
 Clean target directory:
 * ```make clean```
 
@@ -108,6 +105,172 @@ Edit the appropriate file in the sites-enabled folder (such as 000-default), so 
 Whatever user Apache is running as needs the permissions to create files in the project directories.
 
 The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. We need to update it to include the paths to spin and our pmlxml translator. There are multiple ways of doing this but I chose to add the following line to the envvars file in /etc/apache2/:
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin```
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin:$PATH```
 
 Apache will then have to be restarted to enable access.
+
+## Running from Command-Line
+
+PML files are internally translated into Promela code. Promela is the language used by Spin, a model-checker. The configuration provided here returns the output from Spin, and also makes available the intermediate Promela representation.
+
+To be able to run commands easily, first adjust ```PATH``` from the checkout location:
+* ```export PATH=$PATH:$PWD/src/main/translator-xml:$PWD/src/main/model-checker```
+
+### Translating PML to Promela
+
+```PMLToPromela.sh <path-to-input-PML-file> <path-to-output-Promela-file> <path-to-predicate-file>```
+
+where
+* ```<path-to-input-PML-file>``` is the input PML file.
+* ```<path-to-output-Promela-file>``` is the desired target Promela file; if file already exists, the script will over-write it.
+* ```<path-to-predicate-file>``` is the predicate file.
+
+### Running the model-checker
+
+```model-check.sh <path-to-input-Promela-file> <path-to-Spin-output-file> [verify]```
+
+where
+* ```<path-to-input-Promela-file>``` is the input Promela file.
+* ```<path-to-Spin-output-file>``` is the target file where Spin output is to be redirected to; if the file already exists, the script will over-write it.
+* ```[verify]``` specifies that Spin is to be run in Verification mode. By default, Spin is run in Test mode, where only a single possible path of execution is run. Running Spin in Verification mode allows the testing of claims against all possible program states.
+
+## Testing
+To run all of the project test run ```make test``` from the project root directory. 
+To test each of the features individually a valid PML file can be uploaded to the apache webserver.
+Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
+From there you will be presented with a form where you can upload a pml file. 
+
+There is also the option to select canned predicates.
+To use the canned predicates, fill in the required fields and select the checkbox to the right side of the predicate.
+Click submit to be presented with the output of the program.
+
+The following webpage should contain the inputed pml file and at the generated promela code.
+At the bottom of this page there is radio selection where you can select the start state for each resource.
+Leave these in their default state to test the pml constructs.
+These resources can be changed and constitute the "User-space to predicate" feature.
+
+The following webpage displays the run promela code and the the output from running Spin.
+So far the following have been implemented and can be tested;
+* Processes
+* Actions
+* Sequence 
+* Canned Predicates
+* User-space to predicate
+
+The entire web interface constitutes the plumbing feature.
+There are selenium tests which test the plumbing functionality.
+
+### Process
+To test process an empty pml process can be passed to the model checker
+
+Empty Process:
+```
+process test {
+}
+```
+Produces spin output in which all states are reached. This verifies that all states in the pml process can be reached.
+
+### Actions
+
+Unreachable action:
+```
+process test_action {
+    action act {
+	requires { a }
+	provides { a }
+    }
+}
+```
+Produces spin output in which there is an invalid end state. As the "act" action requires "a" and "a" is never provided by any other action the "act" action cannot be completed.
+
+All actions reachable:
+```
+process abc {
+    action a {
+	provides { b }
+    }
+    action b {
+	requires { b }
+	provides { c }
+    }
+    action c {
+	requires { c }
+	provides { d }
+    }
+}
+```
+Produces spin output in which all states are reached.
+
+Some actions reachable and some not:
+```
+process abc {
+    action a {
+	provides { b }
+    }
+    action b {
+	requires { b }
+	provides { c }
+    }
+    action c {
+	requires { a }
+	provides { d }
+    }
+}
+```
+Produces spin output which has failed as action c is unreachable in the the pml file.
+
+### Sequence
+To test sequences a pml file containing sequence constructs is passed to the system.
+
+Basic sequence without any actions
+```
+process test {
+	sequence one {
+	}
+}
+```
+The above passes as all states can be reached. There are also no resources and thus the User Space feature cannot be used here.
+
+Sequence with an action which cannot proceed
+```
+process test {
+	sequence one {
+		action act {
+		requires { a }
+		provides { b }
+		}
+	}
+}
+```
+The above fails as a is never provided.
+
+Sequence which completes as all actions can proceed
+```
+process abc {
+	sequence one {
+		action a {
+		provides { b }
+		}
+		action b {
+		requires { b }
+		provides { c }
+		}
+		action c {
+		requires { c }
+		provides { d }
+		}
+	}
+}
+```
+
+### Canned Predicates
+The canned predicate feature can be tested from the first web page. 
+On this page the user is presented with a form field of the form `For each system state in which X is supplied, Y will be supplied after`.
+This canned predicate allows the user to specify that for every resource `X` which is returned by an action there is an action afterwards which will supply `Y`.
+
+### User Space
+The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
+The radio buttons allow the user to specify the start state of each resource in the PML system. 
+By default each resource is left as false. 
+By changing to true this allows the resource to be provided as soon as the system starts.
+

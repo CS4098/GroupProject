@@ -11,17 +11,7 @@ build:
 test:
 	@make build
 	@./test-suite/runner-translator.sh ./src/main/translator-xml/PMLToPromela.sh ./test-suite/translator-inputs
-	@./src/test/uitest/runtest.sh
-
-install:
-ifdef DESTDIR
-	if [ ! -d ${DESTDIR} ]; then ${MKDIR_P} ${DESTDIR}; fi
-	@make build 
-	@cp -r target/* ${DESTDIR}
-	@cp -r src/main/webapp/ ${DESTDIR}/public_html
-else
-	@echo DESTDIR not set
-endif
+	@./src/test/uitest/runtest.sh 2>&1 | grep -v "INFO"
 
 clean:
 	@rm -rf ${PML_BNFC}

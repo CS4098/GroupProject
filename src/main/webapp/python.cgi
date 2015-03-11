@@ -5,11 +5,19 @@ import subprocess
 import random
 import string
 import getpass
+import csv
 
 cgitb.enable()
 
 #html header
 print("Content-type: text/html;charset=utf-8\n\n\n")
+
+print("<html>")
+print("<head>")
+print("<title>CGI Result</title>")
+print("<link rel=\"stylesheet\" href=\"../../../css/layout.css\" type=\"text/css\">")
+print("</head>")
+print("<body>")
 
 form = cgi.FieldStorage()
 if "pmlfile" not in form:
@@ -29,29 +37,32 @@ else:
     resourcea = form["resourcea"]
     resourceb = form["resourceb"]
 
-    #print("<p>file from form: ")    
-    #print(pmlfile.filename)
-
     filename = ""
     promelafile = ""
+    spinfile = ""
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
-        predicatefilename = "pred.promela"
-        predicatefile = open(predicatefilename, 'w')
-        predicatefile.write("\n\n");
-        if canneda == "on":
-            predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
-
+        resourcefilename = "res.csv"
+        #predicatefile = open(predicatefilename, 'w')
+        #predicatefile.write("\n\n");
+        #if canneda == "on":
+        #    predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
             filename = ''.join([basefile, ".pml"])
             if not os.path.exists(filename): break
-        promelafile = ''.join(["./", basefile, ".promela"])
+        
+        spinfile = ''.join([basefile, ".spin"])
+        promelafile = ''.join([basefile, ".promela"])
+        resourcefilename = ''.join([basefile, ".csv"])
+
         #print("<p>filename: ")
         #print(filename)
         #print("<p>created by user: ")
         #print(getpass.getuser())
+
+        #save input file to local temp file
         outfile = open(filename, "w")
         while 1:
             line = pmlfile.file.readline()
@@ -59,39 +70,64 @@ else:
             outfile.write(line)
         outfile.close()
 
-        print("<br><br><p>")
-        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, predicatefilename], stdout=subprocess.PIPE)
+        #run process to translate input pml to promela
+        pmlcheck = 0
+        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, resourcefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
+            if line:
+                pmlcheck = 1
+            print("<p>")
             print(line)
+        
+        if pmlcheck:
+            print("<br><p><b>pml was not valid :(</b>")
+            raise SystemExit
 
+        #output input pml
         readpml = open(filename, "r")
         print("<p>PML Input:<p><pre>")
+        print("<div id='pml'>")
         print(readpml.read())
+        print("</div>")
         print("</pre>")
         readpml.close()
 
+        #output generated promela
         readpromela = open(promelafile, "r")
         print("<p>Generated Promela:<p><pre>")
+        print("<div id='promela'>")
+        print(promelafile)
         print(readpromela.read())
+        print("</div>")
         print("</pre>")
         readpromela.close()
 
-        spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
-        spin.wait()
-        print("<p>Spin output:<p><pre>")
-        for line in spin.stdout:
-            print(line)
-        print("</pre>")
 
+        readresources = open(resourcefilename, "r")
+        print "<b>Select starting values for resources</b>"
+        print "<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>"
+        csvreader = csv.reader(readresources)
+        resourcelist = list(csvreader)
+        if len(resourcelist) > 0:
+            for resource in resourcelist[0]:
+                print "<i>" + resource + "</i>"
+                print "<input type='radio' name=" + resource + " value='true'>True"
+                print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
+        print "<input name='resourcefile' type='hidden' value=\"" + resourcefilename + "\">"
+        print "<input name='promelafile' type='hidden' value=\"" + promelafile + "\">"
+        print "<input name='spinfile' type='hidden' value=\"" + spinfile + "\">"
+        print "<input type='submit' value='Submit'>"
+
+        print "</form>"
+        readresources.close()
+
+
+        #delete temp files
         os.remove(filename)
-        os.remove(promelafile)
-    
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
-    
 
-
-
-
+print("</body>")
+print("</html>")

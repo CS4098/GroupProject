@@ -93,8 +93,7 @@ class XMLTranslator:
     def parse_nodes(self, node, depth, processes_sofar, process_current, resources_sofar):
         for child in node:
             if child.tag in self.constructs:
-                self.constructs[child.tag](child, depth + 1, processes_sofar, process_current,
-                                                    resources_sofar)
+                self.constructs[child.tag](child, depth + 1, processes_sofar, process_current,resources_sofar)
         pass
 
     # Parse Process, the outermost level of a PML file
@@ -117,14 +116,19 @@ class XMLTranslator:
 
         # Assemble resources and processes into translation
         translation = []
+
+        resourcelist = []
         if len(resources) > 0:
             for resource in resources:  # FIXME: not sure this is where resources should be going - scoping?
-                translation.append("bool " + resource + ";")
-            translation.append("")
+                resourcelist.append(resource + ",")
+            resourcelist.append("")
+        translation.append(resourcelist)
 
+        processlist = []
         for process in processes:
             for line in process:
-                translation.append(line)
+                processlist.append(line)
+        translation.append(processlist)
 
         return translation
 
