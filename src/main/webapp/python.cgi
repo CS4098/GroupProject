@@ -56,7 +56,7 @@ else:
         #print(getpass.getuser())
 
         #save input file to local temp file
-        #outfile = open(filename, "w")
+        outfile = open(filename, "w")
         while 1:
             line = pmlfile.file.readline()
             if not line: break
@@ -73,7 +73,7 @@ else:
             print("<p>")
             print(line)
         
-        #if pmlcheck:
+        if pmlcheck:
             print("<br><p><b>pml was not valid :(</b>")
             raise SystemExit
 
