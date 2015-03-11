@@ -1,6 +1,6 @@
 #!/bin/bash
 
-usage="Usage: $0 <path-to-input-PML-file> <path-to-output-Promela-file> <path-to-predicate-file>"
+usage="Usage: $0 <path-to-input-PML-file> <path-to-output-Promela-file> <path-to-resource-file>"
 xmltmp="pmltopromela_tmp.xml"
 promelatmp="promela_tmp.promela"
 
@@ -40,17 +40,12 @@ if ! [[ -d $promeladir ]]; then
 fi
 
 # Run translators
+resourcetmp=$3
 python $pmltoxml -p $pmlfile -x $xmltmp
-python $xmltopromela -x $xmltmp -p $promelatmp
+python $xmltopromela -x $xmltmp -r $resourcetmp -p $promelafile
 
-predicatefile=$3
-cat $promelatmp $predicatefile > $promelafile
 
 # Clean temporaries
 if [[ -f $xmltmp ]]; then
 	rm $xmltmp
-fi
-
-if [[ -f $promelatmp ]]; then
-	rm $promelatmp
 fi

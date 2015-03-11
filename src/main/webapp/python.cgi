@@ -5,6 +5,7 @@ import subprocess
 import random
 import string
 import getpass
+import csv
 
 cgitb.enable()
 
@@ -29,24 +30,22 @@ else:
     resourcea = form["resourcea"]
     resourceb = form["resourceb"]
 
-    #print("<p>file from form: ")    
-    #print(pmlfile.filename)
-
     filename = ""
     promelafile = ""
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
-        predicatefilename = "pred.promela"
-        predicatefile = open(predicatefilename, 'w')
-        predicatefile.write("\n\n");
-        if canneda == "on":
-            predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
+        resourcefilename = "res.csv"
+        #predicatefile = open(predicatefilename, 'w')
+        #predicatefile.write("\n\n");
+        #if canneda == "on":
+        #    predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
 
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
             filename = ''.join([basefile, ".pml"])
             if not os.path.exists(filename): break
+                
         promelafile = ''.join(["./", basefile, ".promela"])
         #print("<p>filename: ")
         #print(filename)
@@ -60,7 +59,7 @@ else:
         outfile.close()
 
         print("<br><br><p>")
-        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, predicatefilename], stdout=subprocess.PIPE)
+        process = subprocess.Popen(["../translator-xml/PMLToPromela.sh", filename, promelafile, resourcefilename], stdout=subprocess.PIPE)
         process.wait()
         for line in process.stdout:
             print(line)
@@ -76,10 +75,28 @@ else:
         readpromela = open(promelafile, "r")
         print("<p>Generated Promela:<p><pre>")
         print("<div id='promela'>")
+        print(promelafile)
         print(readpromela.read())
         print("</div>")
         print("</pre>")
         readpromela.close()
+
+        readresources = open(resourcefilename, "r")
+        print "<b>Select starting values for resources</b>"
+        print "<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>"
+        csvreader = csv.reader(readresources)
+        resourcelist = list(csvreader)
+        for resource in resourcelist[0]:
+            print "<i>" + resource + "</i>"
+            print "<input type='radio' name=" + resource + " value='true'>True"
+            print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
+        print "<input name='resourcefile' type='hidden' value=\"" + resourcefilename + "\">"
+        print "<input name='promelafile' type='hidden' value=\"" + promelafile + "\">"
+        print "<input type='submit' value='Submit'>"
+
+        print "</form>"
+        readresources.close()
+
 
         spin = subprocess.Popen("spin %s" % promelafile, shell=True, stdout=subprocess.PIPE)
         spin.wait()
@@ -91,13 +108,8 @@ else:
         print("</pre>")
 
         os.remove(filename)
-        os.remove(promelafile)
+
     
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
-    
-
-
-
-
