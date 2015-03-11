@@ -141,18 +141,27 @@ Follow the above instructions to set up the apache server and then visit the loc
 From there you will be presented with a form where you can upload a pml file. 
 
 There is also the option to select canned predicates.
-To use the canned predicates, fill in the required fields and select the checkbox to the side of the predicate.
+To use the canned predicates, fill in the required fields and select the checkbox to the right side of the predicate.
 Click submit to be presented with the output of the program.
 
-The following webpage should contain the inputed pml file, the generated promela code and then the output from running Spin.
+The following webpage should contain the inputed pml file and at the generated promela code.
+At the bottom of this page there is radio selection where you can select the start state for each resource.
+Leave these in their default state to test the pml constructs.
+These resources can be changed and constitute the "User-space to predicate" feature.
+
+The following webpage displays the run promela code and the the output from running Spin.
 So far the following have been implemented and can be tested;
 * Processes
 * Actions
 * Sequence 
 * Canned Predicates
+* User-space to predicate
+
+The entire web interface constitutes the plumbing feature.
+There are selenium tests which test the plumbing functionality.
 
 ### Process
-To test process an empty pml process can be passsed to the model checker
+To test process an empty pml process can be passed to the model checker
 
 Empty Process:
 ```
@@ -210,5 +219,17 @@ process abc {
 ```
 Produces spin output which has failed as action c is unreachable in the the pml file.
 
+### Sequence
+To test sequences a pml file containing sequence constructs is passed to the system.
 
+### Canned Predicates
+The canned predicate feature can be tested from the first web page. 
+On this page the user is presented with a form field of the form `For each system state in which X is supplied, Y will be supplied after`.
+This canned predicate allows the user to specify that for every resource `X` which is returned by an action there is an action afterwards which will supply `Y`.
+
+### User Space
+The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
+The radio buttons allow the user to specify the start state of each resource in the PML system. 
+By default each resource is left as false. 
+By changing to true this allows the resource to be provided as soon as the system starts.
 
