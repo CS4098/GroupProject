@@ -35,7 +35,7 @@ promela = open(promelafile, "w")
 for line in lines:
     promela.write("%s\n" % line)
     print("<p>" + line + "</p>")
-promela.close
+promela.close()
 
 
 
