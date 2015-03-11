@@ -67,23 +67,23 @@ class promelaGenerator(unittest.TestCase):
     def tearDown(self):
        self.driver.quit()
 
-class spinOutput(unittest.TestCase):
-    def setUp(self):
-        self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
+# class spinOutput(unittest.TestCase):
+#     def setUp(self):
+#         self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
 
-    def test_ui(self):
-        driver = self.driver
-        driver.get("http://vps138348.ovh.net/GroupProject/")
+#     def test_ui(self):
+#         driver = self.driver
+#         driver.get("http://vps138348.ovh.net/GroupProject/")
 
-        fileUpload = driver.find_element_by_name("pmlfile")
-        fileUpload.send_keys("src/test/uitest/test.pml")
-        fileUpload.submit()
+#         fileUpload = driver.find_element_by_name("pmlfile")
+#         fileUpload.send_keys("src/test/uitest/test.pml")
+#         fileUpload.submit()
 
-        spin = driver.find_element_by_id("spin")
-        assert spin.text != ""
+#         spin = driver.find_element_by_id("spin")
+#         assert spin.text != ""
 
-    def tearDown(self):
-       self.driver.quit()
+#     def tearDown(self):
+#        self.driver.quit()
 
 if __name__ == "__main__":
     unittest.main()
