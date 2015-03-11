@@ -222,6 +222,47 @@ Produces spin output which has failed as action c is unreachable in the the pml 
 ### Sequence
 To test sequences a pml file containing sequence constructs is passed to the system.
 
+Basic sequence without any actions
+```
+process test {
+	sequence one {
+	}
+}
+```
+The above passes as all states can be reached. There are also no resources and thus the User Space feature cannot be used here.
+
+Sequence with an action which cannot proceed
+```
+process test {
+	sequence one {
+		action act {
+		requires { a }
+		provides { b }
+		}
+	}
+}
+```
+The above fails as a is never provided.
+
+Sequence which completes as all actions can proceed
+```
+process abc {
+	sequence one {
+		action a {
+		provides { b }
+		}
+		action b {
+		requires { b }
+		provides { c }
+		}
+		action c {
+		requires { c }
+		provides { d }
+		}
+	}
+}
+```
+
 ### Canned Predicates
 The canned predicate feature can be tested from the first web page. 
 On this page the user is presented with a form field of the form `For each system state in which X is supplied, Y will be supplied after`.
