@@ -134,6 +134,17 @@ where
 * ```<path-to-Spin-output-file>``` is the target file where Spin output is to be redirected to; if the file already exists, the script will over-write it.
 * ```[verify]``` specifies that Spin is to be run in Verification mode. By default, Spin is run in Test mode, where only a single possible path of execution is run. Running Spin in Verification mode allows the testing of claims against all possible program states.
 
+#### Replaying Trail Files
+
+When Spin is run in Verification mode, and either times out or finds a counter-example, a trail file will be generated. The trail file may be replayed in Spin to show all steps leading up to the timeout or assertion failure. The output from replaying it may be viewed as follows:
+
+```replay-trail.sh <path-to-promela-file> <path-to-trail-file> <path-to-spin-output-file>```
+
+where
+* ```<path-to-promela-file>``` is the original input Promela file.
+* ```<path-to-trail-file>``` is the trail file; its location will be given in the Spin output from when it was run in Verification mode.
+* ```<path-to-spin-output-file>``` is the target file where Spin output is to be redirected to; if the file already exists, the script will over-write it.
+
 ## Testing
 To run all of the project test run ```make test``` from the project root directory. 
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
