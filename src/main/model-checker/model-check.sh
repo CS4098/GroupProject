@@ -52,8 +52,4 @@ elif [[ "$3" == "verify" ]]; then
 	# Clean temporaries relating to verification mode
 	rm -f $pan.? $pan
 
-	# FIXME: maybe do something with the trail files later; for now, erase this artefact
-	if [[ -f $promelafile.trail ]]; then
-		rm -f $promelafile.trail
-	fi
 fi
