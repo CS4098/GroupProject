@@ -7,7 +7,6 @@ default:
 build:
 	if [ ! -d ${PML_BNFC} ]; then ${MKDIR_P} ${PML_BNFC} && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc ${PML_BNFC}; fi
 	@cabal sandbox init
-	@cabal update
 	@cabal install
 	@cp .cabal-sandbox/bin/Pmlxml ./pml-bnfc/xml/
 
