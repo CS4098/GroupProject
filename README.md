@@ -60,6 +60,13 @@ Other dependencies
 * ```apt-get install -y haskell-platform && cabal update```
 * ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
+### Install Cabal and create sandbox
+In order to use a sandboxed environment, cabal version 1.18 or greater is required
+* ```cabal install cabal cabal-install```
+* You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
+* ```cabal sandbox init```
+* ```cabal update```
+
 ## Building
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
 * ```export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin```
