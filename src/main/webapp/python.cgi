@@ -18,7 +18,7 @@ print("<title>CGI Result</title>")
 print("<link rel=\"stylesheet\" href=\"../../../css/layout.css\" type=\"text/css\">")
 print("</head>")
 print("<body>")
-print("div class=\"main\"")
+print("<div class=\"main\">")
 
 form = cgi.FieldStorage()
 if "pmlfile" not in form:
