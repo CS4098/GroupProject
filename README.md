@@ -4,32 +4,13 @@
 Project repo for the CS4098 module in Trinity College Dublin. The purpose of this project is to build a model checker for the PML (process modelling language).
 
 
-## Development
-
-### Installation With Docker
-This project has been developed using a docker image running Ubuntu 12.04. To ensure compatibility with the target machine we recommend using docker for development.
-
-#### Mac OSX
-
-See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
-
-#### Linux (64-bit)
-
-##### Debian
-See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/installation/debian/)
-
-##### Ubuntu
-See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
-
-After Docker has been installed:
-
-* ```docker pull cs4098/groupproject```
-* ```git clone https://github.com/cs4098/groupproject```
-* ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
-* ```./launch.sh```
-* ```cd /opt/group-project```
-
 ## Requirements
+### Installation on Windows
+We do not support Windows and cannot guarantee the following will work.
+
+### Installation on Mac OS X
+We do not support Mac OS X and cannot guarantee the following will work.
+
 ### Installation on Ubuntu 12.04
 To install natively on Ubuntu 12.04 there are several dependencies that must installed.
 
@@ -291,4 +272,30 @@ The user space feature can be tested on the second webpage in the radio select b
 The radio buttons allow the user to specify the start state of each resource in the PML system. 
 By default each resource is left as false. 
 By changing to true this allows the resource to be provided as soon as the system starts.
+
+
+## Development
+
+### Installation With Docker
+This project has been developed using a docker image running Ubuntu 12.04. To ensure compatibility with the target machine, docker can be used for development. We do not recommend using docker for anything other than development.
+
+#### Mac OSX
+
+See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
+
+#### Linux (64-bit)
+
+##### Debian
+See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/installation/debian/)
+
+##### Ubuntu
+See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
+
+After Docker has been installed:
+
+* ```docker pull cs4098/groupproject```
+* ```git clone https://github.com/cs4098/groupproject```
+* ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+* ```./launch.sh```
+* ```cd /opt/group-project```
 
