@@ -46,7 +46,7 @@ with open(promelafile, "r") as f:
         base_promela = base_promela[0]
     lines.append(base_promela)
 
-print("<p>Promela file with resources set:")
+print("<p><b>Promela file with resources set:</b>")
 print("<p><pre>")
 open(promelafile, "w").close()
 promela = open(promelafile, "w")
@@ -60,11 +60,11 @@ print("</pre>")
 spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
 spin.wait()
 for line in spin.stdout:
-    print(line)
+    print("<p>" + line)
 
 #output spin results
 readspin = open(spinfile, "r")
-print("<p>Spin output:<p><pre>")
+print("<p><b>Spin output:</b><p><pre>")
 print("<div id='spin'>")
 print(readspin.read())
 print("</div>")
@@ -74,7 +74,23 @@ print("</div>")
 print("</pre>")
 
 trailfile = promelafile + ".trail"
-os.remove(trailfile) if os.path.isfile(trailfile) else None
+if os.path.isfile(trailfile):
+    trail = subprocess.Popen(["../model-checker/replay-trail.sh", promelafile, trailfile, spinfile], stdout=subprocess.PIPE)
+    trail.wait()
+    for line in trail.stdout:
+        print("<p>" + line)
+    #output trail spin results
+    readspin = open(spinfile, "r")
+    print("<p><b>Spin Trail output:</b><p><pre>")
+    print("<div id='spin'>")
+    print(readspin.read())
+    print("</div>")
+    print("</pre>")
+    readspin.close()
+    print("</div>")
+    print("</pre>")
+
+    os.remove(trailfile)
 
 os.remove(spinfile)
 os.remove(resourcefilename)
