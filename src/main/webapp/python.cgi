@@ -18,6 +18,7 @@ print("<title>CGI Result</title>")
 print("<link rel=\"stylesheet\" href=\"../../../css/layout.css\" type=\"text/css\">")
 print("</head>")
 print("<body>")
+print("div class=\"main\"")
 
 form = cgi.FieldStorage()
 if "pmlfile" not in form:
@@ -68,7 +69,7 @@ else:
         #output input pml
         readpml = open(filename, "r")
         print("<p>PML Input:<p><pre>")
-        print("<div id='pml'>")
+        print("<div class='code' id='pml'>")
         print(readpml.read())
         print("</div>")
         print("</pre>")
@@ -79,7 +80,7 @@ else:
         encodedpromela = base64.b64encode(readpromela.read())
         readpromela.seek(0)
         print("<p>Generated Promela:<p><pre>")
-        print("<div id='promela'>")
+        print("<div class='code' id='promela'>")
         print(readpromela.read())
         print("</div>")
         print("</pre>")
@@ -117,5 +118,6 @@ else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
 
+print("</div>")
 print("</body>")
 print("</html>")

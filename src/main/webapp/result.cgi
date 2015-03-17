@@ -10,6 +10,14 @@ cgitb.enable()
 #html header
 print("Content-type: text/html;charset=utf-8\n\n\n")
 
+print("<html>")
+print("<head>")
+print("<title>CGI Result</title>")
+print("<link rel=\"stylesheet\" href=\"../../../css/layout.css\" type=\"text/css\">")
+print("</head>")
+print("<body>")
+print("div class=\"main\"")
+
 form = cgi.FieldStorage()
 
 base = form.getvalue("base")
@@ -50,9 +58,11 @@ print("<p><b>Promela file with resources set:</b>")
 print("<p><pre>")
 open(promelafile, "w").close()
 promela = open(promelafile, "w")
+print("<div class=\"code\">")
 for line in lines:
     promela.write("%s\n" % line)
     print(line)
+print("</div>")
 promela.close()
 print("</pre>")
 
@@ -65,7 +75,7 @@ for line in spin.stdout:
 #output spin results
 readspin = open(spinfile, "r")
 print("<p><b>Spin output:</b><p><pre>")
-print("<div id='spin'>")
+print("<div class='code' id='spin'>")
 print(readspin.read())
 print("</div>")
 print("</pre>")
@@ -95,3 +105,7 @@ if os.path.isfile(trailfile):
 os.remove(spinfile)
 os.remove(resourcefilename)
 os.remove(promelafile)
+
+print("</div>")
+print("</body>")
+print("</html>")
