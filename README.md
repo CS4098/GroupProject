@@ -291,6 +291,11 @@ See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/inst
 ##### Ubuntu
 See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
 
+There are additional dependencies when installing with Docker. The following must be installed with superuser privileges:
+
+* Git: ```apt-get install -y git```
+* Mercurial: ```apt-get install -y mercurial```
+
 After Docker has been installed:
 
 * ```docker pull cs4098/groupproject```
