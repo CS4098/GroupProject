@@ -4,8 +4,8 @@ import os
 import subprocess
 import random
 import string
-import getpass
 import csv
+import base64
 
 cgitb.enable()
 
@@ -26,41 +26,23 @@ if "pmlfile" not in form:
 else:
     #currently: saves input file with random filename, passes file to PMLToPromela.sh and outputs the result, then passes through spin and outputs the result, deletes files when finished
 
-    canneda = ""
-    if "canneda" in form:
-        canneda = "on"
-    if canneda == "on":
-        print("<p>")
-        print("You've picked a canned predicate!")
-
     pmlfile = form["pmlfile"]
-    resourcea = form["resourcea"]
-    resourceb = form["resourceb"]
-
-    filename = ""
-    promelafile = ""
-    spinfile = ""
 
     #handle input
     if pmlfile.file and pmlfile.filename.endswith(".pml"):
-        resourcefilename = "res.csv"
+        
         #predicatefile = open(predicatefilename, 'w')
         #predicatefile.write("\n\n");
         #if canneda == "on":
         #    predicatefile.write("never {\n    do\n    :: " + str(resourcea) + " -> break\n    :: true\n    od;\naccept:\n    do\n    :: !" + str(resourceb) + "\n    od\n}")
+
         while 1:
             basefile = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
-            filename = ''.join([basefile, ".pml"])
+            filename = basefile + ".pml"
             if not os.path.exists(filename): break
         
-        spinfile = ''.join([basefile, ".spin"])
-        promelafile = ''.join([basefile, ".promela"])
-        resourcefilename = ''.join([basefile, ".csv"])
-
-        #print("<p>filename: ")
-        #print(filename)
-        #print("<p>created by user: ")
-        #print(getpass.getuser())
+        promelafile = basefile + ".promela"
+        resourcefilename = basefile + ".csv"
 
         #save input file to local temp file
         outfile = open(filename, "w")
@@ -77,8 +59,7 @@ else:
         for line in process.stdout:
             if line:
                 pmlcheck = 1
-            print("<p>")
-            print(line)
+            print("<p>" + line)
         
         if pmlcheck:
             print("<br><p><b>pml was not valid :(</b>")
@@ -93,38 +74,45 @@ else:
         print("</pre>")
         readpml.close()
 
-        #output generated promela
+        #output and encode generated promela
         readpromela = open(promelafile, "r")
+        encodedpromela = base64.b64encode(readpromela.read())
+        readpromela.seek(0)
         print("<p>Generated Promela:<p><pre>")
         print("<div id='promela'>")
-        print(promelafile)
         print(readpromela.read())
         print("</div>")
         print("</pre>")
-        readpromela.close()
+        readpromela.close()      
 
-
+        #output options based on resource file and encode file
         readresources = open(resourcefilename, "r")
-        print "<b>Select starting values for resources</b>"
-        print "<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>"
+        encodedresources = base64.b64encode(readresources.read())
+        readresources.seek(0)
+        print("<b>Select starting values for resources</b>")
+        print("<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>")
         csvreader = csv.reader(readresources)
         resourcelist = list(csvreader)
         if len(resourcelist) > 0:
             for resource in resourcelist[0]:
-                print "<i>" + resource + "</i>"
-                print "<input type='radio' name=" + resource + " value='true'>True"
-                print "<input type='radio' name=" + resource + " value='false' checked>False<br>"
-        print "<input name='resourcefile' type='hidden' value=\"" + resourcefilename + "\">"
-        print "<input name='promelafile' type='hidden' value=\"" + promelafile + "\">"
-        print "<input name='spinfile' type='hidden' value=\"" + spinfile + "\">"
-        print "<input type='submit' value='Submit'>"
+                print("<i>" + resource + "</i>")
+                print("<input type='radio' name=" + resource + " value='true'>True")
+                print("<input type='radio' name=" + resource + " value='false' checked>False<br>")
 
-        print "</form>"
+        #pass base64 encoded files to new form
+        print("<input name='resourcefile' type='hidden' value=\"" + encodedresources + "\">")
+        print("<input name='promelafile' type='hidden' value=\"" + encodedpromela + "\">")
+        print("<input name='base' type='hidden' value=\"" + basefile + "\">")
+        print("<input type='submit' value='Submit'>")
+
+        print("</form>")
         readresources.close()
 
 
         #delete temp files
         os.remove(filename)
+        os.remove(resourcefilename)
+        os.remove(promelafile)
     else:
         print("<p>")
         print("<h1>Please Select a file with a .pml extenstion</h1>")
