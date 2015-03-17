@@ -92,7 +92,7 @@ if os.path.isfile(trailfile):
     #output trail spin results
     readspin = open(spinfile, "r")
     print("<p><b>Spin Trail output:</b><p><pre>")
-    print("<div id='spin'>")
+    print("<div class='code' id='spin'>")
     print(readspin.read())
     print("</div>")
     print("</pre>")
