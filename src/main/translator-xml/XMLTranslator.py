@@ -119,8 +119,11 @@ class XMLTranslator:
 
         resourcelist = []
         if len(resources) > 0:
-            for resource in resources:  # FIXME: not sure this is where resources should be going - scoping?
-                resourcelist.append(resource + ",")
+            for i, resource in enumerate(resources):  # FIXME: not sure this is where resources should be going - scoping?
+                if i < len(resources)-1:
+                    resourcelist.append(resource + ",")
+                else:
+                    resourcelist.append(resource)
             resourcelist.append("")
         translation.append(resourcelist)
 
