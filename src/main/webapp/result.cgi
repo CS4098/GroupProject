@@ -80,7 +80,6 @@ print(readspin.read())
 print("</div>")
 print("</pre>")
 readspin.close()
-print("</div>")
 print("</pre>")
 
 trailfile = promelafile + ".trail"
