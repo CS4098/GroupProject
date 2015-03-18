@@ -10,7 +10,7 @@ class pmlFile(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
 
-    def test_ui(self):
+    def testUI(self):
         driver = self.driver
         driver.get("http://vps138348.ovh.net/GroupProject/")
 
@@ -25,35 +25,11 @@ class pmlFile(unittest.TestCase):
     def tearDown(self):
        self.driver.quit()
 
-# class isCanned(unittest.TestCase):
-#     def setUp(self):
-#         self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
-
-#     def test_ui(self):
-#         driver = self.driver
-#         driver.get("http://vps138348.ovh.net/GroupProject/")
-
-#         fileUpload = driver.find_element_by_name("pmlfile")
-#         fileUpload.send_keys("src/test/uitest/test.pml")
-
-#         cannedCheckBox = driver.find_element_by_name("canneda")
-#         cannedCheckBox.click()
-
-#         fileUpload.submit()
-
-#         isCanned = driver.find_element_by_tag_name("p")
-
-#         assert isCanned.text != ""
-
-
-#     def tearDown(self):
-#        self.driver.quit()
-
 class promelaGenerator(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
 
-    def test_ui(self):
+    def testUI(self):
         driver = self.driver
         driver.get("http://vps138348.ovh.net/GroupProject/")
 
@@ -71,7 +47,7 @@ class spinOutput(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
 
-    def test_ui(self):
+    def testUI(self):
         driver = self.driver
         driver.get("http://vps138348.ovh.net/GroupProject/")
 
@@ -83,6 +59,27 @@ class spinOutput(unittest.TestCase):
         resourceValue.submit()
 
         spin = driver.find_element_by_id("spin")
+        assert spin.text != ""
+
+    def tearDown(self):
+        self.driver.quit()
+
+class spinTrailOutput(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
+
+    def testUI(self):
+        driver = self.driver
+        driver.get("http://vps138348.ovh.net/GroupProject/")
+
+        fileUpload = driver.find_element_by_name("pmlfile")
+        fileUpload.send_keys("src/test/uitest/test.pml")
+        fileUpload.submit()
+
+        resourceValue = driver.find_element_by_name("resourcefile")
+        resourceValue.submit()
+
+        spin = driver.find_element_by_id("spintrail")
         assert spin.text != ""
 
     def tearDown(self):
