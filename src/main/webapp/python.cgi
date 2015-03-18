@@ -68,7 +68,7 @@ else:
 
         #output input pml
         readpml = open(filename, "r")
-        print("<p>PML Input:<p><pre>")
+        print("<p><b>PML File Uploaded by User:</b><p><pre>")
         print("<div class='code' id='pml'>")
         print(readpml.read())
         print("</div>")
@@ -79,7 +79,7 @@ else:
         readpromela = open(promelafile, "r")
         encodedpromela = base64.b64encode(readpromela.read())
         readpromela.seek(0)
-        print("<p>Generated Promela:<p><pre>")
+        print("<p><b>Initial Promela Generated from the above PML:</b><p><pre>")
         print("<div class='code' id='promela'>")
         print(readpromela.read())
         print("</div>")
@@ -90,7 +90,7 @@ else:
         readresources = open(resourcefilename, "r")
         encodedresources = base64.b64encode(readresources.read())
         readresources.seek(0)
-        print("<b>Select starting values for resources</b>")
+        print("<p>The resources(bools) need to be set to true or false to represent whether they are initially available or not<p><b>Please select starting values for resources below and submit</b>")
         print("<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>")
         csvreader = csv.reader(readresources)
         resourcelist = list(csvreader)
