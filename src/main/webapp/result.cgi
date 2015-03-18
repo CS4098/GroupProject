@@ -97,7 +97,6 @@ if os.path.isfile(trailfile):
     print("</div>")
     print("</pre>")
     readspin.close()
-    print("</div>")
     print("</pre>")
 
     os.remove(trailfile)
