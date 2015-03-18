@@ -138,9 +138,6 @@ To run all of the project test run ```make test``` from the project root directo
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
 From there you will be presented with a form where you can upload a pml file. 
-
-There is also the option to select canned predicates.
-To use the canned predicates, fill in the required fields and select the checkbox to the right side of the predicate.
 Click submit to be presented with the output of the program.
 
 The following webpage should contain the inputed pml file and at the generated promela code.
