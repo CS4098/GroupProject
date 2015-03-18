@@ -262,12 +262,8 @@ process abc {
 }
 ```
 
-### Canned Predicates
-The canned predicate feature can be tested from the first web page. 
-On this page the user is presented with a form field of the form `For each system state in which X is supplied, Y will be supplied after`.
-This canned predicate allows the user to specify that for every resource `X` which is returned by an action there is an action afterwards which will supply `Y`.
 
-### User Space
+### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
 The radio buttons allow the user to specify the start state of each resource in the PML system. 
 By default each resource is left as false. 
