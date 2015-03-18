@@ -1,35 +1,16 @@
 # GroupProject
-[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=it3)](https://travis-ci.org/CS4098/GroupProject)
+[![Build Status](https://travis-ci.org/CS4098/GroupProject.svg?branch=master)](https://travis-ci.org/CS4098/GroupProject)
 
 Project repo for the CS4098 module in Trinity College Dublin. The purpose of this project is to build a model checker for the PML (process modelling language).
 
 
-## Development
-
-### Installation With Docker
-This project has been developed using a docker image running Ubuntu 12.04. To ensure compatibility with the target machine we recommend using docker for development.
-
-#### Mac OSX
-
-See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
-
-#### Linux (64-bit)
-
-##### Debian
-See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/installation/debian/)
-
-##### Ubuntu
-See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
-
-After Docker has been installed:
-
-* ```docker pull cs4098/groupproject```
-* ```git clone https://github.com/cs4098/groupproject```
-* ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
-* ```./launch.sh```
-* ```cd /opt/group-project```
-
 ## Requirements
+### Installation on Windows
+We do not support Windows and cannot guarantee the following will work.
+
+### Installation on Mac OS X
+We do not support Mac OS X and cannot guarantee the following will work.
+
 ### Installation on Ubuntu 12.04
 To install natively on Ubuntu 12.04 there are several dependencies that must installed.
 
@@ -157,9 +138,6 @@ To run all of the project test run ```make test``` from the project root directo
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
 From there you will be presented with a form where you can upload a pml file. 
-
-There is also the option to select canned predicates.
-To use the canned predicates, fill in the required fields and select the checkbox to the right side of the predicate.
 Click submit to be presented with the output of the program.
 
 The following webpage should contain the inputed pml file and at the generated promela code.
@@ -281,14 +259,41 @@ process abc {
 }
 ```
 
-### Canned Predicates
-The canned predicate feature can be tested from the first web page. 
-On this page the user is presented with a form field of the form `For each system state in which X is supplied, Y will be supplied after`.
-This canned predicate allows the user to specify that for every resource `X` which is returned by an action there is an action afterwards which will supply `Y`.
 
-### User Space
+### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
 The radio buttons allow the user to specify the start state of each resource in the PML system. 
 By default each resource is left as false. 
 By changing to true this allows the resource to be provided as soon as the system starts.
+
+
+## Development
+
+### Installation With Docker
+This project has been developed using a docker image running Ubuntu 12.04. To ensure compatibility with the target machine, docker can be used for development. We do not recommend using docker for anything other than development.
+
+#### Mac OSX
+
+See: [Boot2Docker](https://github.com/boot2docker/boot2docker)
+
+#### Linux (64-bit)
+
+##### Debian
+See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/installation/debian/)
+
+##### Ubuntu
+See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
+
+There are additional dependencies when installing with Docker. The following must be installed with superuser privileges:
+
+* Git: ```apt-get install -y git```
+* Mercurial: ```apt-get install -y mercurial```
+
+After Docker has been installed:
+
+* ```docker pull cs4098/groupproject```
+* ```git clone https://github.com/cs4098/groupproject```
+* ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+* ```./launch.sh```
+* ```cd /opt/group-project```
 
