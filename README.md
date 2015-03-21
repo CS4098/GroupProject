@@ -15,17 +15,17 @@ We do not support Mac OS X and cannot guarantee the following will work.
 To install natively on Ubuntu 12.04 there are several dependencies that must installed.
 
 #### Install build tools, curl, mercurial, git
-* ```apt-get update && apt-get install -y build-essential```
-* ```apt-get install -y curl```
-* ```apt-get install mercurial```
-* ```apt-get install -y git```
+* ```sudo apt-get update && sudo apt-get install -y build-essential```
+* ```sudo apt-get install -y curl```
+* ```sudo apt-get install -y mercurial```
+* ```sudo apt-get install -y git```
 
 #### Python Dependencies
 Python 2.6 or later
 * ```https://www.python.org/downloads/```
 
 lxml XML parser
-* ```apt-get install python-lxml```
+* ```sudo apt-get install -y python-lxml```
 
 Other dependencies
 * ```pip install -r requirements.txt```
@@ -38,7 +38,7 @@ Other dependencies
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
 #### Install Haskell platform and the BNFC library
-* ```apt-get install -y haskell-platform && cabal update```
+* ```sudo apt-get install -y haskell-platform && cabal update```
 * ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
 ### Install Cabal and create sandbox
@@ -284,10 +284,10 @@ See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/inst
 ##### Ubuntu
 See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
 
-There are additional dependencies when installing with Docker. The following must be installed with superuser privileges:
+There are additional dependencies when installing with Docker:
 
-* Git: ```apt-get install -y git```
-* Mercurial: ```apt-get install -y mercurial```
+* Git: ```sudo apt-get install -y git```
+* Mercurial: ```sudo apt-get install -y mercurial```
 
 After Docker has been installed:
 
