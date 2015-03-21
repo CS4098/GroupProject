@@ -1,0 +1,31 @@
+bool a;
+bool b;
+bool c;
+
+active proctype test()
+{
+	int br1 = _nr_pr;
+	run act_1();
+	run act_2();
+	run act_3();
+	_nr_pr == br1 ->
+		skip;
+}
+
+proctype act_1()
+{
+	a ->
+		b = true;
+}
+
+proctype act_2()
+{
+	b ->
+		c = true;
+}
+
+proctype act_3()
+{
+	a ->
+		c = true;
+}

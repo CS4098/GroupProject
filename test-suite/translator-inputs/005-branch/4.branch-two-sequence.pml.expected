@@ -1,0 +1,31 @@
+bool a;
+bool b;
+bool c;
+bool d;
+bool e;
+bool f;
+
+active proctype test()
+{
+	int br1 = _nr_pr;
+	run seq1();
+	run seq2();
+	_nr_pr == br1 ->
+		skip;
+}
+
+proctype seq1()
+{
+	a ->
+		b = true;
+	b ->
+		c = true;
+}
+
+proctype seq2()
+{
+	d ->
+		e = true;
+	e ->
+		f = true;
+}
