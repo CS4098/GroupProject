@@ -8,11 +8,11 @@ class XMLTranslator:
     def __init__(self):
         self.constructs = {
             "PrimAct": self.handle_action,
+            "PrimBr": self.handle_branch,
             "PrimIter": self.handle_iteration,
+            "PrimSeln": self.handle_selection,
             "PrimSeq": self.handle_sequence,
-            "PrimTask": self.handle_sequence,
-            "PrimSeln": self.handle_selection
-            # More..
+            "PrimTask": self.handle_sequence
         }
 
     # Get display indentation for a certain depth
@@ -84,6 +84,29 @@ class XMLTranslator:
 
         for prov in provlist:
             resources_sofar.add(prov)
+
+    # PML branch
+    def handle_branch(self, node, depth, processes_sofar, process_current, resources_sofar):
+        construct_name = node[0][0].get("value") # Branch name; ID will be first element in well-formed XML
+
+        beforeline = self.get_indent(depth)
+        beforeline += "int " + str(construct_name) + " = _nr_pr;" # Records the number of processes currently running
+        process_current.append(beforeline)
+
+        for child in node:
+            if child.tag != "OpNmId": # Not interested in the ID again
+                branch_name = str(child[0].get("value"))
+                process_within = ["proctype " + branch_name + "()", "{"]
+                processes_sofar.append(process_within)
+                self.parse_nodes(node, 0, processes_sofar, process_within, resources_sofar)
+                process_within.append("}")
+                runline = self.get_indent(depth)
+                runline += "run " + branch_name + "();"
+                process_current.append(runline)
+
+        afterline = self.get_indent(depth)
+        afterline += "_nr_pr == " + str(construct_name) + " ->" # Waits until the spawned processes have completed
+        process_current.append(afterline)
 
     # PML iteration
     def handle_iteration(self, node, depth, processes_sofar, process_current, resources_sofar):
