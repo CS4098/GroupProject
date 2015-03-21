@@ -95,10 +95,20 @@ class XMLTranslator:
 
         for child in node:
             if child.tag != "OpNmId": # Not interested in the ID again
-                branch_name = str(child[0].get("value"))
+                if child.tag == "PrimAct":
+                    branch_name = str(child[0].get("value"))
+                else:
+                    branch_name = str(child[0][0].get("value"))
+
+                print branch_name
                 process_within = ["proctype " + branch_name + "()", "{"]
                 processes_sofar.append(process_within)
-                self.parse_node_as_branch(node, 0, processes_sofar, process_within, resources_sofar, branch_name)
+
+                if child.tag == "PrimAct": # Action blocks work slightly differently
+                    self.parse_node_as_branch(node, 0, processes_sofar, process_within, resources_sofar, branch_name)
+                else:
+                    self.parse_nodes(child, 0, processes_sofar, process_within, resources_sofar)
+
                 process_within.append("}")
                 runline = self.get_indent(depth)
                 runline += "run " + branch_name + "();"
