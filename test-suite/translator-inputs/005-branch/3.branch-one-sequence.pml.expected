@@ -7,7 +7,6 @@ active proctype test()
 	int br1 = _nr_pr;
 	run seq1();
 	_nr_pr == br1 ->
-		skip;
 }
 
 proctype seq1()

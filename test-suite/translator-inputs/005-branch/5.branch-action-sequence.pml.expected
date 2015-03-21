@@ -10,7 +10,6 @@ active proctype test()
 	run act_1();
 	run seq_1();
 	_nr_pr == br1 ->
-		skip;
 }
 
 proctype act_1()
