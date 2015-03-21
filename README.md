@@ -284,7 +284,39 @@ process test {
 }
 ```
 
-When run, the system will perform either Action act1 or Sequence one, which consist of act2 and act3.
+When run, the system will perform either Action act1 or Sequence one, which consists of act2 and act3.
+
+### Branch
+To test branch, pass a pml file containing branch constructs to the system.
+
+Example branch construct:
+```
+process test{
+	branch br1 {
+		sequence seq1 {
+			action act_1 {
+			requires { a }
+			provides { b }
+			}
+			action act_2 {
+			requires { b }
+			provides { c }
+			}
+		}
+		sequence seq2 {
+			action act_3 {
+			requires { d }
+			provides { e }
+			}
+			action act_4 {
+			requires { e }
+			provides { f }
+			}
+		}
+	}
+}
+```
+When run, the system will perform Sequences seq1 and seq2 in parallel.
 
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
