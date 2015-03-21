@@ -98,7 +98,7 @@ class XMLTranslator:
                 branch_name = str(child[0].get("value"))
                 process_within = ["proctype " + branch_name + "()", "{"]
                 processes_sofar.append(process_within)
-                self.parse_nodes(node, 0, processes_sofar, process_within, resources_sofar)
+                self.parse_node_as_branch(node, 0, processes_sofar, process_within, resources_sofar, branch_name)
                 process_within.append("}")
                 runline = self.get_indent(depth)
                 runline += "run " + branch_name + "();"
@@ -121,7 +121,13 @@ class XMLTranslator:
         for child in node:
             if child.tag in self.constructs:
                 self.constructs[child.tag](child, depth + 1, processes_sofar, process_current,resources_sofar)
-        pass
+
+    # Parse child node of a branch construct
+    def parse_node_as_branch(self, node, depth, processes_sofar, process_current, resources_sofar, branch_name):
+        for child in node:
+            if child[0].get("value") == branch_name:
+                if child.tag in self.constructs:
+                    self.constructs[child.tag](child, depth + 1, processes_sofar, process_current,resources_sofar)
 
     # Parse Process, the outermost level of a PML file
     def parse_process(self, root):
@@ -144,9 +150,12 @@ class XMLTranslator:
         # Assemble resources and processes into translation
         translation = []
 
+        resources_ordered = list(resources)
+        resources_ordered.sort()
+
         resourcelist = []
         if len(resources) > 0:
-            for i, resource in enumerate(resources):  # FIXME: not sure this is where resources should be going - scoping?
+            for i, resource in enumerate(resources_ordered):  # FIXME: not sure this is where resources should be going - scoping?
                 if i < len(resources)-1:
                     resourcelist.append(resource + ",")
                 else:
