@@ -1,6 +1,6 @@
 bool a;
-bool c;
 bool b;
+bool c;
 bool d;
 
 active proctype abc()

@@ -1,6 +1,6 @@
 bool a;
-bool c;
 bool b;
+bool c;
 
 active proctype test()
 {
