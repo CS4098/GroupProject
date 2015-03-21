@@ -100,7 +100,6 @@ class XMLTranslator:
                 else:
                     branch_name = str(child[0][0].get("value"))
 
-                print branch_name
                 process_within = ["proctype " + branch_name + "()", "{"]
                 processes_sofar.append(process_within)
 
@@ -177,6 +176,7 @@ class XMLTranslator:
         for process in processes:
             for line in process:
                 processlist.append(line)
+            processlist.append("")
         translation.append(processlist)
 
         return translation
