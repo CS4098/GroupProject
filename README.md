@@ -12,7 +12,7 @@ We do not support Windows and cannot guarantee the following will work.
 We do not support Mac OS X and cannot guarantee the following will work.
 
 ### Installation on Ubuntu 12.04
-To install natively on Ubuntu 12.04 there are several dependencies that must installed.
+To install natively on Ubuntu 12.04 there are several dependencies that must installed. Unless otherwise noted, any commands listed here should be run from the project root.
 
 #### Install build tools, curl, mercurial, git
 * ```sudo apt-get update && sudo apt-get install -y build-essential```
@@ -147,11 +147,12 @@ These resources can be changed and constitute the "User-space to predicate" feat
 
 The following webpage displays the run promela code and the the output from running Spin.
 So far the following have been implemented and can be tested;
-* Processes
-* Actions
-* Sequence 
-* Canned Predicates
-* User-space to predicate
+* Process
+* Action
+* Sequence
+* Selection
+* Branch
+* User-space predicates
 
 The entire web interface constitutes the plumbing feature.
 There are selenium tests which test the plumbing functionality.
@@ -258,7 +259,32 @@ process abc {
 	}
 }
 ```
+### Selection
+To test selection, pass a pml file containing selection constructs to the system.
 
+Example selection construct:
+```
+process test {
+    selection {
+        action act1 {
+	        requires { a }
+	        provides { a }
+        }
+        sequence one {
+		    action act2 {
+		        requires { a }
+                provides { c }
+		    }
+            action act3 {
+		        requires { c }
+                provides { b }
+		    }
+	    }
+    }
+}
+```
+
+When run, the system will perform either Action act1 or Sequence one, which consist of act2 and act3.
 
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
