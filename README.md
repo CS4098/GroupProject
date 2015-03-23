@@ -11,65 +11,25 @@ We do not support Windows and cannot guarantee the following will work.
 ### Installation on Mac OS X
 We do not support Mac OS X and cannot guarantee the following will work.
 
-### Installation on Ubuntu 12.04
-To install natively on Ubuntu 12.04 there are several dependencies that must installed. Unless otherwise noted, any commands listed here should be run from the project root.
+### Installation on Ubuntu 14.04
+To install natively on Ubuntu 14.04 there are several dependencies that must installed. Unless otherwise noted, any commands listed here should be run from the project root.
 
-#### Install build tools, curl, mercurial, git
+#### Install build tools, curl, mercurial, git, pip, java
 * ```sudo apt-get update && sudo apt-get install -y build-essential```
 * ```sudo apt-get install -y curl```
+* ```sudo apt-get -y install python-pip```
 * ```sudo apt-get install -y mercurial```
 * ```sudo apt-get install -y git```
+* ```sudo apt-get install -y default-jdk```
 
-#### Python Dependencies
-Python 2.6 or later
-* ```https://www.python.org/downloads/```
-
-lxml XML parser
-* ```sudo apt-get install -y python-lxml```
-
-Other dependencies
-* ```pip install -r requirements.txt```
-
-#### Install Spin/Promela
-64-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
-
-32-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
-
-#### Install Haskell platform and the BNFC library
-* ```sudo apt-get install -y haskell-platform && cabal update```
-* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
-
-### Install Cabal and create sandbox
-In order to use a sandboxed environment, cabal version 1.18 or greater is required
-* ```cabal install cabal cabal-install```
-* You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
-* ```cabal sandbox init```
-* ```cabal update```
-
-## Building
-To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
-* ```export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin```
-If you installed Pmlxml or Spin in another directory you will need to modify the above Path to point to the correct directories.
-
-Build the program:
-* ```make build```
-
-Build the program and run unit tests:
-* ```make/make test```
-
-Clean target directory:
-* ```make clean```
-
-## Running with Web Based UI
+### Running with Web Based UI
 The installation process described above should be done before this section. The project should be placed at the top of the Apache document root.
 
-### HTTP Server
+#### HTTP Server
 A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
 To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
 
-### Enabling CGI
+#### Enabling CGI
 First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
 
 Make sure that the mods-enabled directory contains ```cgid.conf``` and ```cgid.load```
@@ -89,10 +49,72 @@ Edit the appropriate file in the sites-enabled folder (such as 000-default), so 
     AddHandler cgi-script .cgi
 </Directory>
 ```
-### Permissions and PATH
+
+#### Project location
+Once Apache has been installed, you can download the project files. 
+For easiest installation we recommend placing the project in the apache root directory.
+On Ubuntu 14.04 this directory is ```/var/www/html```
+
+#### Python Dependencies
+Python 2.6 or later
+* ```https://www.python.org/downloads/```
+
+lxml XML parser
+* ```sudo apt-get install -y python-lxml```
+
+Other dependencies.
+Run this from the project root
+* ```pip install -r requirements.txt```
+
+#### Install Spin/Promela
+Run either of these from the project root.
+
+64-bit Linux:
+* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
+
+32-bit Linux:
+* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
+
+#### Install Haskell and the BNFC library
+* ```sudo apt-get install -y ghc ghc-prof ghc-doc```
+* ```sudo apt-get install -y cabal-install```
+* ```cabal update```
+* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+
+### Install Cabal and create sandbox
+In order to use a sandboxed environment, cabal version 1.18 or greater is required
+* ```cabal install cabal cabal-install```
+It has been found that the above can fail due to a missing zlib dependency. If this happens we recommend installing the following.
+* ```sudo apt-get install -y zlib1g-dev```
+
+* You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
+* ```cabal sandbox init```
+* ```cabal update```
+
+Install haskell dependencies, alex and happy.
+* ```sudo apt-get install -y alex```
+* ```sudo apt-get install -y happy```
+* ```cabal install --only-dependencies```
+
+## Building
+To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
+* ```export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin```
+If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
+
+Build the program:
+* ```make build```
+
+Build the program and run unit tests:
+* ```make test```
+
+Clean target directory:
+* ```make clean```
+
+### Apache Permissions and Apache PATH
 Whatever user Apache is running as needs the permissions to create files in the project directories.
 
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. We need to update it to include the paths to spin and our pmlxml translator. There are multiple ways of doing this but I chose to add the following line to the envvars file in /etc/apache2/:
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
+There are multiple ways of doing this but I chose to add the following line to the envvars file in /etc/apache2/:
 * ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin:$PATH```
 
 Apache will then have to be restarted to enable access.
