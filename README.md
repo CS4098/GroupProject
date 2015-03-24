@@ -46,7 +46,7 @@ In the /etc/apache2/apache2.conf file add a Directory tag for the project locati
 
 For Example, if the default location is used:
 ```
-<Directory /var/www/>
+<Directory /var/www/html/>
     Options +ExecCGI
     AddHandler cgi-script .cgi
 </Directory>
@@ -114,7 +114,7 @@ Clean target directory:
 The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
 
 We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
-Add the following line to /etc/apache2/envvars (replacing <path-to-project> with the path to where the project is located e.g. /var/www/html/GroupProject):
+Add the following line to /etc/apache2/envvars (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
 * ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/pml-bnfc/xml:<path-to-project>/spin```
 
 Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
