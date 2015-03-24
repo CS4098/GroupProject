@@ -23,7 +23,6 @@ To install natively on Ubuntu 14.04 there are several dependencies that must ins
 * ```sudo apt-get install -y default-jdk```
 
 ### Running with Web Based UI
-The installation process described above should be done before this section. The project should be placed at the top of the Apache document root.
 
 #### HTTP Server
 A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
@@ -32,17 +31,20 @@ To install the latest version of Apache on Ubuntu use ```sudo apt-get install ap
 #### Enabling CGI
 First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
 
-Make sure that the mods-enabled directory contains ```cgid.conf``` and ```cgid.load```
+Use ```sudo a2enmod cgid``` to enable cgi scripts
 
-If not, create a symbolic link to their locations in the mods-available directory:
-* ```ln -s /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/```
-* ```ln -s /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/```
+#### Project location
+Once Apache has been installed, you can download the project files. 
+For easiest installation we recommend cloning or copying the project into the apache root directory.
+On Ubuntu 14.04 this directory is ```/var/www/html```
 
-Next, Apache must be told where cgi scripts will be and what they will look like, there are a number of ways of doing this which can be found here: http://httpd.apache.org/docs/2.2/howto/cgi.html
+When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like.
 
-I used the following method:
+In the /etc/apache2/apache2.conf file add a Directory tag for the project location containing the following directives:
+* ```Options +ExecCGI```
+* ```AddHandler cgi-script .cgi```
 
-Edit the appropriate file in the sites-enabled folder (such as 000-default), so that after the document root is declared we tell Apache that files ending with .cgi are cgi scripts (/var/www/ may need to be changed if this is not your document root):
+For Example, if the default location is used:
 ```
 <Directory /var/www/>
     Options +ExecCGI
@@ -50,10 +52,7 @@ Edit the appropriate file in the sites-enabled folder (such as 000-default), so 
 </Directory>
 ```
 
-#### Project location
-Once Apache has been installed, you can download the project files. 
-For easiest installation we recommend placing the project in the apache root directory.
-On Ubuntu 14.04 this directory is ```/var/www/html```
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file.
 
 #### Python Dependencies
 Python 2.6 or later
@@ -110,14 +109,15 @@ Build the program and run unit tests:
 Clean target directory:
 * ```make clean```
 
-### Apache Permissions and Apache PATH
-Whatever user Apache is running as needs the permissions to create files in the project directories.
+### Apache PATH
 
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
-There are multiple ways of doing this but I chose to add the following line to the envvars file in /etc/apache2/:
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin:$PATH```
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
 
-Apache will then have to be restarted to enable access.
+We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
+Add the following line to /etc/apache2/envvars (replacing <path-to-project> with the path to where the project is located e.g. /var/www/html/GroupProject):
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/pml-bnfc/xml:<path-to-project>/spin```
+
+Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
 
 ## Running from Command-Line
 
