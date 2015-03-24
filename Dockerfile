@@ -8,6 +8,7 @@ RUN apt-get install -y git
 RUN apt-get install -y mercurial
 RUN curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o /bin/spin.gz && gunzip /bin/spin.gz && chmod +x /bin/spin
 RUN apt-get install -y ghc ghc-prof ghc-doc
+RUN apt-get install -y zlib1g-dev
 RUN apt-get install -y cabal-install
 RUN cabal update
 RUN apt-get install -y alex
