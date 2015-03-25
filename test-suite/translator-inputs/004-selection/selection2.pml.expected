@@ -1,0 +1,20 @@
+bool a;
+bool b;
+bool c;
+bool d;
+
+active proctype test()
+{
+	if
+	:: true ->
+			a ->
+				a = true;
+	:: true ->
+				a ->
+					b = true;
+				b ->
+					c = true;
+				c ->
+					d = true;
+	fi
+}

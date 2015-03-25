@@ -17,7 +17,7 @@ before_install:
  - travis_retry sudo apt-get install mercurial
  - travis_retry hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc
  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
- - export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin
+ - export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin
 
 install:
  - cabal --version

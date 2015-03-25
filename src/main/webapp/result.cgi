@@ -48,7 +48,7 @@ if len(resourcelist) > 0:
 with open(promelafile, "r") as f:
     base_promela = f.read()
     base_promela = base_promela.split("\n\n")
-    if len(base_promela) is 2:
+    if len(base_promela) >= 2:
         base_promela = base_promela[1]
     else:
         base_promela = base_promela[0]

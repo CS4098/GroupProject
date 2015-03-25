@@ -1,14 +1,19 @@
 #!/usr/bin/env python
+import lxml
+import sys
+from lxml import etree
+
 
 class XMLTranslator:
 
     def __init__(self):
         self.constructs = {
             "PrimAct": self.handle_action,
+            "PrimBr": self.handle_branch,
             "PrimIter": self.handle_iteration,
+            "PrimSeln": self.handle_selection,
             "PrimSeq": self.handle_sequence,
             "PrimTask": self.handle_sequence
-            # More..
         }
 
     # Get display indentation for a certain depth
@@ -81,6 +86,38 @@ class XMLTranslator:
         for prov in provlist:
             resources_sofar.add(prov)
 
+    # PML branch
+    def handle_branch(self, node, depth, processes_sofar, process_current, resources_sofar):
+        construct_name = node[0][0].get("value")  # Branch name; ID will be first element in well-formed XML
+
+        beforeline = self.get_indent(depth)
+        beforeline += "int " + str(construct_name) + " = _nr_pr;"  # Records the number of processes currently running
+        process_current.append(beforeline)
+
+        for child in node:
+            if child.tag != "OpNmId":  # Not interested in the ID again
+                if child.tag == "PrimAct":
+                    branch_name = str(child[0].get("value"))
+                else:
+                    branch_name = str(child[0][0].get("value"))
+
+                process_within = ["proctype " + branch_name + "()", "{"]
+                processes_sofar.append(process_within)
+
+                if child.tag == "PrimAct":  # Action blocks work slightly differently
+                    self.parse_node_as_branch(node, 0, processes_sofar, process_within, resources_sofar, branch_name)
+                else:
+                    self.parse_nodes(child, 0, processes_sofar, process_within, resources_sofar)
+
+                process_within.append("}")
+                runline = self.get_indent(depth)
+                runline += "run " + branch_name + "();"
+                process_current.append(runline)
+
+        afterline = self.get_indent(depth)
+        afterline += "_nr_pr == " + str(construct_name) + " ->"  # Waits until the spawned processes have completed
+        process_current.append(afterline)
+
     # PML iteration
     def handle_iteration(self, node, depth, processes_sofar, process_current, resources_sofar):
         pass
@@ -93,8 +130,14 @@ class XMLTranslator:
     def parse_nodes(self, node, depth, processes_sofar, process_current, resources_sofar):
         for child in node:
             if child.tag in self.constructs:
-                self.constructs[child.tag](child, depth + 1, processes_sofar, process_current,resources_sofar)
-        pass
+                self.constructs[child.tag](child, depth + 1, processes_sofar, process_current, resources_sofar)
+
+    # Parse child node of a branch construct
+    def parse_node_as_branch(self, node, depth, processes_sofar, process_current, resources_sofar, branch_name):
+        for child in node:
+            if child[0].get("value") == branch_name:
+                if child.tag in self.constructs:
+                    self.constructs[child.tag](child, depth + 1, processes_sofar, process_current, resources_sofar)
 
     # Parse Process, the outermost level of a PML file
     def parse_process(self, root):
@@ -117,10 +160,13 @@ class XMLTranslator:
         # Assemble resources and processes into translation
         translation = []
 
+        resources_ordered = list(resources)
+        resources_ordered.sort()
+
         resourcelist = []
         if len(resources) > 0:
-            for i, resource in enumerate(resources):  # FIXME: not sure this is where resources should be going - scoping?
-                if i < len(resources)-1:
+            for i, resource in enumerate(resources_ordered):  # FIXME: not sure this is where resources should be going - scoping?
+                if i < len(resources) - 1:
                     resourcelist.append(resource + ",")
                 else:
                     resourcelist.append(resource)
@@ -131,18 +177,30 @@ class XMLTranslator:
         for process in processes:
             for line in process:
                 processlist.append(line)
+            processlist.append("")
         translation.append(processlist)
 
         return translation
 
     # PML selection
     def handle_selection(self, node, depth, processes_sofar, process_current, resources_sofar):
+        if_block = False
+        curdepth = depth
+        line = self.get_indent(curdepth)
+        for child_node in node.iterchildren():
+            if child_node.tag in self.constructs:
+                if not if_block:
+                    if_block = not if_block
+                    process_current.append(line + "if")
+                process_current.append(line + ":: true ->")
+                temp_root = etree.Element(child_node.tag)
+                temp_root.insert(0, child_node)
+                self.parse_nodes(temp_root, depth + 1, processes_sofar, process_current, resources_sofar)
+        if if_block:
+            process_current.append(line + "fi")
         pass
 
     def translate_xml(self, xml_string):
-        import lxml
-        import sys
-        from lxml import etree
 
         root = None
         try:

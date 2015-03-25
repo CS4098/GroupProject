@@ -11,91 +11,113 @@ We do not support Windows and cannot guarantee the following will work.
 ### Installation on Mac OS X
 We do not support Mac OS X and cannot guarantee the following will work.
 
-### Installation on Ubuntu 12.04
-To install natively on Ubuntu 12.04 there are several dependencies that must installed.
+### Installation on Ubuntu 14.04
+To install natively on Ubuntu 14.04 there are several dependencies that must installed. Unless otherwise noted, any commands listed here should be run from the project root.
 
-#### Install build tools, curl, mercurial, git
-* ```apt-get update && apt-get install -y build-essential```
-* ```apt-get install -y curl```
-* ```apt-get install mercurial```
-* ```apt-get install -y git```
+#### Install build tools, curl, mercurial, git, pip, java
+* ```sudo apt-get update && sudo apt-get install -y build-essential```
+* ```sudo apt-get install -y curl```
+* ```sudo apt-get -y install python-pip```
+* ```sudo apt-get install -y mercurial```
+* ```sudo apt-get install -y git```
+* ```sudo apt-get install -y default-jdk```
+
+### Running with Web Based UI
+
+#### HTTP Server
+A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
+To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
+
+#### Enabling CGI
+First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
+
+Use ```sudo a2enmod cgid``` to enable cgi scripts
+
+#### Project location
+Once Apache has been installed, you can download the project files. 
+For easiest installation we recommend cloning or copying the project into the apache root directory.
+On Ubuntu 14.04 this directory is ```/var/www/html```
+
+When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like.
+
+In the /etc/apache2/apache2.conf file add a Directory tag for the project location containing the following directives:
+* ```Options +ExecCGI```
+* ```AddHandler cgi-script .cgi```
+
+For Example, if the default location is used:
+```
+<Directory /var/www/html/>
+    Options +ExecCGI
+    AddHandler cgi-script .cgi
+</Directory>
+```
+
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file.
 
 #### Python Dependencies
 Python 2.6 or later
 * ```https://www.python.org/downloads/```
 
 lxml XML parser
-* ```apt-get install python-lxml```
+* ```sudo apt-get install -y python-lxml```
 
-Other dependencies
-* ```pip install -r requirements.txt```
+Other dependencies.
+Run this from the project root
+* ```sudo pip install -r requirements.txt```
 
 #### Install Spin/Promela
+Run either of these from the project root.
+
 64-bit Linux:
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
 32-bit Linux:
 * ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
 
-#### Install Haskell platform and the BNFC library
-* ```apt-get install -y haskell-platform && cabal update```
+#### Install Haskell and the BNFC library
+* ```sudo apt-get install -y ghc ghc-prof ghc-doc```
+* ```sudo apt-get install -y cabal-install```
+* ```cabal update```
 * ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
 ### Install Cabal and create sandbox
 In order to use a sandboxed environment, cabal version 1.18 or greater is required
 * ```cabal install cabal cabal-install```
+It has been found that the above can fail due to a missing zlib dependency. If this happens we recommend installing the following.
+* ```sudo apt-get install -y zlib1g-dev```
+
 * You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
 * ```cabal sandbox init```
 * ```cabal update```
 
+Install haskell dependencies, alex and happy.
+* ```sudo apt-get install -y alex```
+* ```sudo apt-get install -y happy```
+* ```cabal install --only-dependencies```
+
 ## Building
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
-* ```export PATH=$PATH:$PWD/pml-bnfc/xml:$PWD/spin```
-If you installed Pmlxml or Spin in another directory you will need to modify the above Path to point to the correct directories.
+* ```export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin```
+If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
 
 Build the program:
 * ```make build```
 
 Build the program and run unit tests:
-* ```make/make test```
+* ```make test```
 
 Clean target directory:
 * ```make clean```
 
-## Running with Web Based UI
-The installation process described above should be done before this section. The project should be placed at the top of the Apache document root.
+### Apache PATH
 
-### HTTP Server
-A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
-To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
 
-### Enabling CGI
-First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
+We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
+Add the following line to /etc/apache2/envvars (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
 
-Make sure that the mods-enabled directory contains ```cgid.conf``` and ```cgid.load```
-
-If not, create a symbolic link to their locations in the mods-available directory:
-* ```ln -s /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/```
-* ```ln -s /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/```
-
-Next, Apache must be told where cgi scripts will be and what they will look like, there are a number of ways of doing this which can be found here: http://httpd.apache.org/docs/2.2/howto/cgi.html
-
-I used the following method:
-
-Edit the appropriate file in the sites-enabled folder (such as 000-default), so that after the document root is declared we tell Apache that files ending with .cgi are cgi scripts (/var/www/ may need to be changed if this is not your document root):
-```
-<Directory /var/www/>
-    Options +ExecCGI
-    AddHandler cgi-script .cgi
-</Directory>
-```
-### Permissions and PATH
-Whatever user Apache is running as needs the permissions to create files in the project directories.
-
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. We need to update it to include the paths to spin and our pmlxml translator. There are multiple ways of doing this but I chose to add the following line to the envvars file in /etc/apache2/:
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/path/to/pml-bnfc/xml:/path/to/spin:$PATH```
-
-Apache will then have to be restarted to enable access.
+Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
 
 ## Running from Command-Line
 
@@ -147,11 +169,12 @@ These resources can be changed and constitute the "User-space to predicate" feat
 
 The following webpage displays the run promela code and the the output from running Spin.
 So far the following have been implemented and can be tested;
-* Processes
-* Actions
-* Sequence 
-* Canned Predicates
-* User-space to predicate
+* Process
+* Action
+* Sequence
+* Selection
+* Branch
+* User-space predicates
 
 The entire web interface constitutes the plumbing feature.
 There are selenium tests which test the plumbing functionality.
@@ -258,7 +281,64 @@ process abc {
 	}
 }
 ```
+### Selection
+To test selection, pass a pml file containing selection constructs to the system.
 
+Example selection construct:
+```
+process test {
+    selection {
+        action act1 {
+	        requires { a }
+	        provides { a }
+        }
+        sequence one {
+		    action act2 {
+		        requires { a }
+                provides { c }
+		    }
+            action act3 {
+		        requires { c }
+                provides { b }
+		    }
+	    }
+    }
+}
+```
+
+When run, the system will perform either Action act1 or Sequence one, which consists of act2 and act3.
+
+### Branch
+To test branch, pass a pml file containing branch constructs to the system.
+
+Example branch construct:
+```
+process test{
+	branch br1 {
+		sequence seq1 {
+			action act_1 {
+			requires { a }
+			provides { b }
+			}
+			action act_2 {
+			requires { b }
+			provides { c }
+			}
+		}
+		sequence seq2 {
+			action act_3 {
+			requires { d }
+			provides { e }
+			}
+			action act_4 {
+			requires { e }
+			provides { f }
+			}
+		}
+	}
+}
+```
+When run, the system will perform Sequences seq1 and seq2 in parallel.
 
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
@@ -284,10 +364,10 @@ See: [https://docs.docker.com/installation/debian/](https://docs.docker.com/inst
 ##### Ubuntu
 See: [http://docs.docker.com/installation/ubuntulinux/](http://docs.docker.com/installation/ubuntulinux/)
 
-There are additional dependencies when installing with Docker. The following must be installed with superuser privileges:
+There are additional dependencies when installing with Docker:
 
-* Git: ```apt-get install -y git```
-* Mercurial: ```apt-get install -y mercurial```
+* Git: ```sudo apt-get install -y git```
+* Mercurial: ```sudo apt-get install -y mercurial```
 
 After Docker has been installed:
 
