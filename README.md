@@ -115,7 +115,7 @@ The PATH used by Apache also needs to updated to include spin and the bnfc trans
 
 We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
 Add the following line to /etc/apache2/envvars (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/pml-bnfc/xml:<path-to-project>/spin```
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
 
 Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
 
