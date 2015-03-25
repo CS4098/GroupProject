@@ -63,7 +63,7 @@ lxml XML parser
 
 Other dependencies.
 Run this from the project root
-* ```pip install -r requirements.txt```
+* ```sudo pip install -r requirements.txt```
 
 #### Install Spin/Promela
 Run either of these from the project root.
