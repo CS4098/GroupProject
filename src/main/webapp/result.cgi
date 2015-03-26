@@ -47,11 +47,9 @@ if len(resourcelist) > 0:
 
 with open(promelafile, "r") as f:
     base_promela = f.read()
-    base_promela = base_promela.split("\n\n")
-    if len(base_promela) >= 2:
-        base_promela = base_promela[1]
-    else:
-        base_promela = base_promela[0]
+    split_promela = base_promela.split("\n\n", 2)
+    if len(split_promela) is 3:
+        base_promela = split_promela[1] + "\n\n" + split_promela[2]
     lines.append(base_promela)
 
 print("<p><b>Generated Promela file updated with user defined resources:</b>")
