@@ -64,6 +64,7 @@ else:
         
         if pmlcheck:
             print("<br><p><b>pml was not valid :(</b>")
+            os.remove(filename)
             raise SystemExit
 
         #output input pml
