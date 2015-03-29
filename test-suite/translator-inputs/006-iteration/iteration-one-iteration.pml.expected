@@ -1,0 +1,7 @@
+
+active proctype iteProc()
+{
+	int count__;
+    for (count__ : 1 .. 4) {
+    }
+}
