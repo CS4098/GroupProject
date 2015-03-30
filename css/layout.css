@@ -16,3 +16,11 @@ body {
     padding: 15px;
     border: 1px solid #505050;
 }
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}

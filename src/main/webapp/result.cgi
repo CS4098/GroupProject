@@ -73,9 +73,9 @@ for line in spin.stdout:
 trailfile = promelafile + ".trail"
 trailexists = os.path.isfile(trailfile)
 if trailexists:
-    print("<div class=\"incorrect\" style=\"color:red\"><p>Spin found errors in the model, results are shown below</p></div>")
+    print("<div class=\"incorrect\"><p>Spin found errors in the model, results are shown below</p></div>")
 else:
-    print("<div class=\"correct\" style=\"color:green\"><p>Spin has found no issues, results are shown below</p></div>")
+    print("<div class=\"correct\"><p>Spin has found no issues, results are shown below</p></div>")
 
 #output spin results
 readspin = open(spinfile, "r")
