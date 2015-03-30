@@ -126,8 +126,7 @@ class XMLTranslator:
         process_current.append(line)
         line = "%sfor (%s : 1 .. %d) {" % (self.get_indent(depth), count, MAX_ITERATIONS)
         process_current.append(line)
-        for child in node:
-            self.parse_nodes(child, depth + 1, processes_sofar, process_current, resources_sofar)
+        self.parse_nodes(node, depth, processes_sofar, process_current, resources_sofar)
         line = "%s}" % self.get_indent(depth)
         process_current.append(line)
 
