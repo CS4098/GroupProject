@@ -107,10 +107,8 @@ class XMLTranslator:
 
                 if child.tag == "PrimAct":  # Action blocks work slightly differently
                     self.parse_node_as_branch(node, 0, processes_sofar, process_within, resources_sofar, branch_name)
-                elif child.tag == "PrimSeln": # Selection blocks need to be called directly
-                    self.handle_selection(child, 1, processes_sofar, process_within, resources_sofar)
-                else:
-                    self.parse_nodes(child, 0, processes_sofar, process_within, resources_sofar)
+                elif child.tag in self.constructs:
+                    self.constructs[child.tag](child, 1, processes_sofar, process_within, resources_sofar)
 
                 process_within.append("}")
                 runline = self.get_indent(depth)
