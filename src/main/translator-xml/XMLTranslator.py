@@ -2,6 +2,7 @@
 import lxml
 import sys
 from lxml import etree
+MAX_ITERATIONS = 4  # Engineers induction as suggested by A Butterfield
 
 
 class XMLTranslator:
@@ -120,7 +121,14 @@ class XMLTranslator:
 
     # PML iteration
     def handle_iteration(self, node, depth, processes_sofar, process_current, resources_sofar):
-        pass
+        count = "count_" + ("_" * depth)
+        line = "%sint %s;" % (self.get_indent(depth), count)
+        process_current.append(line)
+        line = "%sfor (%s : 1 .. %d) {" % (self.get_indent(depth), count, MAX_ITERATIONS)
+        process_current.append(line)
+        self.parse_nodes(node, depth, processes_sofar, process_current, resources_sofar)
+        line = "%s}" % self.get_indent(depth)
+        process_current.append(line)
 
     # PML sequence
     def handle_sequence(self, node, depth, processes_sofar, process_current, resources_sofar):
@@ -198,7 +206,6 @@ class XMLTranslator:
                 self.parse_nodes(temp_root, depth + 1, processes_sofar, process_current, resources_sofar)
         if if_block:
             process_current.append(line + "fi")
-        pass
 
     def translate_xml(self, xml_string):
 
