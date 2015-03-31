@@ -16,6 +16,7 @@ class XMLTranslator:
             "PrimSeq": self.handle_sequence,
             "PrimTask": self.handle_sequence
         }
+        self.anon_index = 1
 
     # Get display indentation for a certain depth
     @staticmethod
@@ -97,10 +98,14 @@ class XMLTranslator:
 
         for child in node:
             if child.tag != "OpNmId":  # Not interested in the ID again
+                # Where a construct is named, we will use that name as the spawned proctype name; otherwise, assign a default name
+                branch_name = "anon_proctype_" + str(self.anon_index)
                 if child.tag == "PrimAct":
                     branch_name = str(child[0].get("value"))
-                else:
+                elif child[0] is not None and child[0].tag == "OpNmId":
                     branch_name = str(child[0][0].get("value"))
+                else:
+                    self.anon_index += 1
 
                 process_within = ["proctype " + branch_name + "()", "{"]
                 processes_sofar.append(process_within)

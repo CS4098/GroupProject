@@ -1,0 +1,30 @@
+bool a;
+bool b;
+bool c;
+bool d;
+bool e;
+
+active proctype test()
+{
+	int br1 = _nr_pr;
+	run act1();
+	run anon_proctype_1();
+	_nr_pr == br1 ->
+}
+
+proctype act1()
+{
+	a ->
+		e = true;
+}
+
+proctype anon_proctype_1()
+{
+    int count__;
+    for (count__ : 1 .. 4) {
+        c ->
+            d = true;
+        d ->
+            b = true;
+    }
+}
