@@ -17,6 +17,7 @@ class XMLTranslator:
             "PrimTask": self.handle_sequence
         }
         self.anon_index = 1
+        self.proccount_index = 1
 
     # Get display indentation for a certain depth
     @staticmethod
@@ -90,15 +91,23 @@ class XMLTranslator:
 
     # PML branch
     def handle_branch(self, node, depth, processes_sofar, process_current, resources_sofar):
-        construct_name = node[0][0].get("value")  # Branch name; ID will be first element in well-formed XML
+        # Where a branch construct is named, we will use that name as process-counting variable name; otherwise, assign a default name
+        construct_name = ""
+        counter_name = "proc_count_" + str(self.proccount_index)
+        if node[0] is not None and node[0].tag == "OpNmId":
+            construct_name = node[0][0].get("value")  # Branch name; ID will be first element in well-formed XML
+            counter_name = construct_name
+        else:
+            self.proccount_index += 1
 
         beforeline = self.get_indent(depth)
-        beforeline += "int " + str(construct_name) + " = _nr_pr;"  # Records the number of processes currently running
+        beforeline += "int " + str(counter_name) + " = _nr_pr;"  # Records the number of processes currently running
         process_current.append(beforeline)
 
         for child in node:
-            if child.tag != "OpNmId":  # Not interested in the ID again
-                # Where a construct is named, we will use that name as the spawned proctype name; otherwise, assign a default name
+            if child.tag != "OpNmId" and child.tag != "OpNmNull":  # Not interested in the ID again
+
+                # Where a nested construct is named, we will use that name as the spawned proctype name; otherwise, assign a default name
                 branch_name = "anon_proctype_" + str(self.anon_index)
                 if child.tag == "PrimAct":
                     branch_name = str(child[0].get("value"))
@@ -121,7 +130,7 @@ class XMLTranslator:
                 process_current.append(runline)
 
         afterline = self.get_indent(depth)
-        afterline += "_nr_pr == " + str(construct_name) + " ->"  # Waits until the spawned processes have completed
+        afterline += "_nr_pr == " + str(counter_name) + " ->"  # Waits until the spawned processes have completed
         process_current.append(afterline)
 
     # PML iteration
@@ -148,9 +157,10 @@ class XMLTranslator:
     # Parse child node of a branch construct
     def parse_node_as_branch(self, node, depth, processes_sofar, process_current, resources_sofar, branch_name):
         for child in node:
-            if child[0].get("value") == branch_name:
-                if child.tag in self.constructs:
-                    self.constructs[child.tag](child, depth + 1, processes_sofar, process_current, resources_sofar)
+            if child.tag != "OpNmId" and child.tag != "OpNmNull":
+                if child[0].get("value") == branch_name:
+                    if child.tag in self.constructs:
+                        self.constructs[child.tag](child, depth + 1, processes_sofar, process_current, resources_sofar)
 
     # Parse Process, the outermost level of a PML file
     def parse_process(self, root):

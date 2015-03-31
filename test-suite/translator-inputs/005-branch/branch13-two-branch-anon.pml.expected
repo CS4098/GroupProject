@@ -1,0 +1,49 @@
+bool a;
+bool b;
+bool c;
+bool d;
+bool e;
+bool f;
+
+active proctype test()
+{
+	int proc_count_1 = _nr_pr;
+	run act_1();
+	run act_2();
+	run act_3();
+	_nr_pr == proc_count_1 ->
+	int proc_count_2 = _nr_pr;
+	run act_4();
+	run act_5();
+	_nr_pr == proc_count_2 ->
+}
+
+proctype act_1()
+{
+	a ->
+		b = true;
+}
+
+proctype act_2()
+{
+	b ->
+		c = true;
+}
+
+proctype act_3()
+{
+	a ->
+		c = true;
+}
+
+proctype act_4()
+{
+	d ->
+		e = true;
+}
+
+proctype act_5()
+{
+	e ->
+		f = true;
+}
