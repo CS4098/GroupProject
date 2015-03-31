@@ -1,0 +1,13 @@
+
+active proctype iteNest()
+{
+	int count__;
+    for (count__ : 1 .. 4) {
+        int count___;
+        for (count___ : 1 .. 4) {
+            int count____;
+            for (count____ : 1 .. 4) {
+            }
+        }
+    }
+}

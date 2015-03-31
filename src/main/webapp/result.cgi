@@ -69,6 +69,13 @@ spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfil
 spin.wait()
 for line in spin.stdout:
     print("<p>" + line)
+    
+trailfile = promelafile + ".trail"
+trailexists = os.path.isfile(trailfile)
+if trailexists:
+    print("<div class=\"incorrect\"><p>Spin found errors in the model, results are shown below</p></div>")
+else:
+    print("<div class=\"correct\"><p>Spin has found no issues, results are shown below</p></div>")
 
 #output spin results
 readspin = open(spinfile, "r")
@@ -80,8 +87,7 @@ print("</pre>")
 readspin.close()
 print("</pre>")
 
-trailfile = promelafile + ".trail"
-if os.path.isfile(trailfile):
+if trailexists:
     trail = subprocess.Popen(["../model-checker/replay-trail.sh", promelafile, trailfile, spinfile], stdout=subprocess.PIPE)
     trail.wait()
     for line in trail.stdout:

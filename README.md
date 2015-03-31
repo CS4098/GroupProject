@@ -340,6 +340,8 @@ process test{
 ```
 When run, the system will perform Sequences seq1 and seq2 in parallel.
 
+Note that, due to a restriction concerning the underlying Spin system, nested branching is not supported. Entering a PML file featuring nested branch constructs produces undefined behaviour.
+
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
 The radio buttons allow the user to specify the start state of each resource in the PML system. 

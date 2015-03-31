@@ -68,3 +68,7 @@ target/
 # External Repo's
 pml-bnfc/
 spin/
+
+# Cabal
+.cabal-sandbox
+cabal.sandbox.config
