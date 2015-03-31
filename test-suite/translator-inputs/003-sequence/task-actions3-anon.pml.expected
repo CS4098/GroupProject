@@ -1,0 +1,16 @@
+bool a;
+bool b;
+bool c;
+bool d;
+
+active proctype abctask()
+{
+	a ->
+		b = true;
+	b ->
+		c = true;
+	c ->
+		d = true;
+}
+
+
