@@ -1,0 +1,60 @@
+bool a;
+bool b;
+bool c;
+bool d;
+bool e;
+bool x;
+
+active proctype test()
+{
+	int br1 = _nr_pr;
+	run sel1();
+	run sel2();
+    run sel3();
+	_nr_pr == br1 ->
+}
+
+proctype sel1()
+{
+    if
+    :: true ->
+             a ->
+                b = true;
+    :: true ->
+             b ->
+                e = true;
+    :: true ->
+             c ->
+                d = true;
+    fi
+}
+
+proctype sel2()
+{
+    if
+    :: true ->
+            a ->
+                d = true;
+    :: true ->
+                a ->
+                    b = true;
+                b ->
+                    c = true;
+                c ->
+                    d = true;
+    fi
+}
+
+proctype sel3()
+{
+    if
+    :: true ->
+            a ->
+                x = true;
+    :: true ->
+                a ->
+                    c = true;
+                c ->
+                    x = true;
+    fi
+}
