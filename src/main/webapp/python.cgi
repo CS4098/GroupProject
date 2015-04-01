@@ -91,15 +91,30 @@ else:
         readresources = open(resourcefilename, "r")
         encodedresources = base64.b64encode(readresources.read())
         readresources.seek(0)
-        print("<p>The resources(bools) need to be set to true or false to represent whether they are initially available or not<p><b>Please select starting values for resources below and submit</b>")
-        print("<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>")
         csvreader = csv.reader(readresources)
         resourcelist = list(csvreader)
+
+        print("<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>")
+
+        print("<p>Predicates can be specified and tested for:</p>")
+        if len(resourcelist) > 0:
+            print("<input type='radio' name='predicate' value='none'>No predicate<br>")
+            print("<input type='radio' name='predicate' value='eventually'>")
+            print("Resource <select name='eventually'>")
+            for resource in resourcelist[0]:
+                print("<option value=eventually." + resource + ">" + resource + "</option>")
+            print("</select> will eventually become available.")
+
+
+
+        print("<p>The resources(bools) need to be set to true or false to represent whether they are initially available or not<p><b>Please select starting values for resources below and submit</b><br>")
+
         if len(resourcelist) > 0:
             for resource in resourcelist[0]:
                 print("<i>" + resource + "</i>")
                 print("<input type='radio' name=" + resource + " value='true'>True")
                 print("<input type='radio' name=" + resource + " value='false' checked>False<br>")
+
 
         #pass base64 encoded files to new form
         print("<input name='resourcefile' type='hidden' value=\"" + encodedresources + "\">")
