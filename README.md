@@ -52,7 +52,9 @@ For Example, if the default location is used:
 </Directory>
 ```
 
-The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file.
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file. The default user for apache is ```www-data``` and by default /var/www/html/ is owned by ```root```. 
+
+To change the owner of the project use ```sudo chown -R www-data:www-data GroupProject``` from /var/www/html/.
 
 #### Python Dependencies
 Python 2.6 or later
