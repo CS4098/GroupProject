@@ -9,7 +9,7 @@ cc="gcc"
 ccopt="-O2"
 
 # Check number of parameters
-if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]]; then
+if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]] && [[ "$#" -ne 4 ]]; then
 	echo $usage
 	exit 1
 fi

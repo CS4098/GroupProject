@@ -77,8 +77,7 @@ elif predicate == "eventually":
 
 spin.wait()
 for line in spin.stdout:
-    print("<p>" + line)
-    
+    print("<p>" + line)           
 trailfile = promelafile + ".trail"
 trailexists = os.path.isfile(trailfile)
 if trailexists:

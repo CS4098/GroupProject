@@ -98,7 +98,7 @@ else:
 
         print("<p>Predicates can be specified and tested for:</p>")
         if len(resourcelist) > 0:
-            print("<input type='radio' name='predicate' value='none'>No predicate<br>")
+            print("<input type='radio' name='predicate' value='none' checked>No predicate<br>")
             print("<input type='radio' name='predicate' value='eventually'>")
             print("Resource <select name='eventually'>")
             for resource in resourcelist[0]:
