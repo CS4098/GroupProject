@@ -33,12 +33,19 @@ First, the Apache server must be allowed to execute cgi scripts. Currently the A
 
 Use ```sudo a2enmod cgid``` to enable cgi scripts
 
+After enabling CGI, Apache must be restarted:
+* ```sudo service apache2 restart```
+
 #### Project location
 Once Apache has been installed, you can download the project files. 
 For easiest installation we recommend cloning or copying the project into the apache root directory.
-On Ubuntu 14.04 this directory is ```/var/www/html```
+On Ubuntu 14.04 this directory is ```/var/www/html```. To clone the project to this location use:
+* ```cd /var/www/html```
+* ```sudo git clone https://github.com/CS4098/GroupProject/ && sudo mv GroupProject/* . && sudo mv GroupProject/.* .```
+* ```sudo rmdir GroupProject```
 
-When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like.
+When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like. Open the apache2.conf file:
+* ```sudo nano /etc/apache2/apache2.conf```
 
 In the /etc/apache2/apache2.conf file add a Directory tag for the project location containing the following directives:
 * ```Options +ExecCGI```
@@ -51,8 +58,6 @@ For Example, if the default location is used:
     AddHandler cgi-script .cgi
 </Directory>
 ```
-
-The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file.
 
 #### Python Dependencies
 Python 2.6 or later
@@ -69,55 +74,71 @@ Run this from the project root
 Run either of these from the project root.
 
 64-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
-
-32-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
+* ```sudo mkdir -p spin && sudo curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && sudo gunzip spin/spin.gz && sudo chmod +x spin/spin```
 
 #### Install Haskell and the BNFC library
 * ```sudo apt-get install -y ghc ghc-prof ghc-doc```
 * ```sudo apt-get install -y cabal-install```
 * ```cabal update```
-* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+* ```sudo hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 
 ### Install Cabal and create sandbox
+
+#### Ubuntu-specific sudo requirement
+The following is required as ```sudo``` does not inherit the environment's PATH.
+* ```alias sudo='sudo env PATH=$PATH'```
+
 In order to use a sandboxed environment, cabal version 1.18 or greater is required
 * ```cabal install cabal cabal-install```
 It has been found that the above can fail due to a missing zlib dependency. If this happens we recommend installing the following.
 * ```sudo apt-get install -y zlib1g-dev```
 
-* You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
-* ```cabal sandbox init```
-* ```cabal update```
+* You may have to update your PATH now as it still points to a version of cabal less than 1.18. By default, cabal will install to the current user's home directory. To modify PATH run:
+* ```export PATH=~/.cabal/bin:$PATH```
+
+Use ```cabal --version``` to check you have the correct version. Next:
+
+* ```sudo cabal sandbox init```
+* ```sudo cabal update```
 
 Install haskell dependencies, alex and happy.
 * ```sudo apt-get install -y alex```
 * ```sudo apt-get install -y happy```
-* ```cabal install --only-dependencies```
+* ```sudo cabal install --only-dependencies```
+
+### Apache Permissions
+
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file. The default Apache user is ```www-data```; if you change this user, wherever ```www-data``` is seen in the following commands, you will need to replace it with your given user name. To give this user the apprapriate permissions, run:
+* ```sudo chown -R www-data:www-data /var/www/html```
 
 ## Building
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
 * ```export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin```
 If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
 
+We need to run the following commands as user www-data, so the previous ```sudo``` alias will not work. Unalias this with:
+* ```unalias sudo```
+
 Build the program:
-* ```make build```
+* ```sudo -u www-data env PATH=$PATH make build```
 
 Build the program and run unit tests:
-* ```make test```
+* ```sudo -u www-data env PATH=$PATH make test```
 
 Clean target directory:
-* ```make clean```
+* ```sudo -u www-data env PATH=$PATH make clean```
 
 ### Apache PATH
 
 The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
 
-We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
-Add the following line to /etc/apache2/envvars (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
+We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
+* ````sudo nano /etc/apache2/envvars```
+Add the following line (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html):
 * ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
 
-Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
+Apache will then have to be restarted to enable access:
+* ```sudo /etc/init.d/apache2 restart```.
 
 ## Running from Command-Line
 
