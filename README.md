@@ -17,7 +17,7 @@ To install natively on Ubuntu 14.04 there are several dependencies that must ins
 #### Install build tools, curl, mercurial, git, pip, java
 * ```sudo apt-get update && sudo apt-get install -y build-essential```
 * ```sudo apt-get install -y curl```
-* ```sudo apt-get -y install python-pip```
+* ```sudo apt-get install -y python-pip```
 * ```sudo apt-get install -y mercurial```
 * ```sudo apt-get install -y git```
 * ```sudo apt-get install -y default-jdk```
@@ -26,7 +26,7 @@ To install natively on Ubuntu 14.04 there are several dependencies that must ins
 
 #### HTTP Server
 A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
-To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
+To install the latest version of Apache on Ubuntu use ```sudo apt-get install -y apache2```
 
 #### Enabling CGI
 First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
@@ -41,11 +41,10 @@ Once Apache has been installed, you can download the project files.
 For easiest installation we recommend cloning or copying the project into the apache root directory.
 On Ubuntu 14.04 this directory is ```/var/www/html```. To clone the project to this location use:
 * ```cd /var/www/html```
-* ```sudo git clone https://github.com/CS4098/GroupProject/ && sudo mv GroupProject/* . && sudo mv GroupProject/.* .```
-* ```sudo rmdir GroupProject```
+* ```sudo git clone https://github.com/CS4098/GroupProject```
 
 When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like. Open the apache2.conf file:
-* ```sudo nano /etc/apache2/apache2.conf```
+* ```sudo emacs /etc/apache2/apache2.conf```
 
 In the /etc/apache2/apache2.conf file add a Directory tag for the project location containing the following directives:
 * ```Options +ExecCGI```
@@ -108,7 +107,7 @@ Install haskell dependencies, alex and happy.
 
 ### Apache Permissions
 
-The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file. The default Apache user is ```www-data```; if you change this user, wherever ```www-data``` is seen in the following commands, you will need to replace it with your given user name. To give this user the apprapriate permissions, run:
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file. The default Apache user is ```www-data```; if you change this user, wherever ```www-data``` is seen in the following commands, you will need to replace it with your given user name. To give this user the appropriate permissions, run:
 * ```sudo chown -R www-data:www-data /var/www/html```
 
 ## Building
@@ -133,7 +132,7 @@ Clean target directory:
 The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
 
 We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
-* ````sudo nano /etc/apache2/envvars```
+* ````sudo emacs /etc/apache2/envvars```
 Add the following line (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html):
 * ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
 
