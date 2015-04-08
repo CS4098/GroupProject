@@ -9,7 +9,7 @@ cc="gcc"
 ccopt="-O2"
 
 # Check number of parameters
-if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]]; then
+if [[ "$#" -ne 2 ]] && [[ "$#" -ne 3 ]] && [[ "$#" -ne 4 ]]; then
 	echo $usage
 	exit 1
 fi
@@ -30,26 +30,51 @@ fi
 if [[ "$#" == 2 ]]; then
 	# Run Spin in test mode
 	$spin $promelafile > $outputfile 2>&1
+fi
 
-elif [[ "$3" == "verify" ]]; then
-	# Run Spin in verification mode
-	$spin -a $promelafile
+if [[ "$#" == 3 ]]; then
+        # Run Spin in verification mode
+        echo `$spin -a $promelafile`
 
-	if ! [[ -f "$pan.c" ]]; then
-		echo "Error: file $pan.c not generated, exiting."
-		exit 1
-	fi
 
-	$cc $ccopt -DSAFETY -o $pan $pan.c # FIXME: is DSAFETY appropriate here?
+        if ! [[ -f "$pan.c" ]]; then
+                echo "Error: file $pan.c not generated, exiting."
+                exit 1
+        fi
 
-	if ! [[ -x "pan" ]]; then
-		echo "Error: executable $pan not generated, exiting."
-		exit 1
-	fi
+        $cc $ccopt -DSAFETY -o $pan $pan.c # FIXME: is DSAFETY appropriate here?
 
-	./$pan > $outputfile 2>&1
+        if ! [[ -x "pan" ]]; then
+                echo "Error: executable $pan not generated, exiting."
+                exit 1
+        fi
 
-	# Clean temporaries relating to verification mode
-	rm -f $pan.? $pan
+        ./$pan > $outputfile 2>&1
 
+        # Clean temporaries relating to verification mode
+        rm -f $pan.? $pan
+fi
+
+predicate=$3
+if [[ "$4" == "verify" ]]; then
+        # Run Spin in verification mode
+        echo `$spin -f "$predicate" -a $promelafile`
+
+
+        if ! [[ -f "$pan.c" ]]; then
+                echo "Error: file $pan.c not generated, exiting."
+                exit 1
+        fi
+
+        $cc $ccopt -DSAFETY -o $pan $pan.c # FIXME: is DSAFETY appropriate here?
+
+        if ! [[ -x "pan" ]]; then
+                echo "Error: executable $pan not generated, exiting."
+                exit 1
+        fi
+
+        ./$pan > $outputfile 2>&1
+
+        # Clean temporaries relating to verification mode
+        rm -f $pan.? $pan
 fi

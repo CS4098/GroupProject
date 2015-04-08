@@ -64,12 +64,20 @@ print("</div>")
 promela.close()
 print("</pre>")
 
+predicate = form.getvalue("predicate")
+if predicate == "none":
+    print("<p id='nopredicate'>No predicate selected.</p>")
+    spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
+elif predicate == "eventually":
+    predresource = form.getvalue("eventually").split(".")[1]
+    pred = ("!(<> ", predresource, ")")
+    predparam = ''.join(pred)
+    print("<p id='predicate'>Predicate selected: " + predparam + "</p>")
+    spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, predparam, "verify"], stdout=subprocess.PIPE)
 
-spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
 spin.wait()
 for line in spin.stdout:
-    print("<p>" + line)
-    
+    print("<p>" + line)           
 trailfile = promelafile + ".trail"
 trailexists = os.path.isfile(trailfile)
 if trailexists:
