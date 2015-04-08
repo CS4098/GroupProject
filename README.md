@@ -36,7 +36,7 @@ Use ```sudo a2enmod cgid``` to enable cgi scripts
 After enabling CGI, Apache must be restarted, however this can wait for the moment as we are about to edit the config file.
 
 ### Project location
-Once Apache has been installed, you can download the project files. 
+Once Apache has been installed, you can download the project files.
 For easiest installation we recommend cloning or copying the project into the apache root directory.
 On Ubuntu 14.04 this directory is ```/var/www/html```. To clone the project to this location use:
 * ```cd /var/www/html```
@@ -121,7 +121,7 @@ Install haskell dependencies, alex and happy.
 
 ### Apache PATH
 
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```.
 
 We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
 * ```sudo emacs /etc/apache2/envvars```
@@ -212,10 +212,10 @@ Use ```sudo emacs /etc/apache2/envvars``` and change the following lines (replac
 
 ## Testing
 To run all of the project test run ```make test``` from the project root directory.
-Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail. 
+Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail.
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
-From there you will be presented with a form where you can upload a pml file. 
+From there you will be presented with a form where you can upload a pml file.
 Click submit to be presented with the output of the program.
 
 The following webpage should contain the inputed pml file and at the generated promela code.
@@ -398,10 +398,40 @@ When run, the system will perform Sequences seq1 and seq2 in parallel.
 
 Note that, due to a restriction concerning the underlying Spin system, nested branching is not supported. Entering a PML file featuring nested branch constructs produces undefined behaviour.
 
+### Iteration
+To test iteration, pass a pml file containing iteration constructs to the system.
+
+Example iteration construct:
+```
+process itNested {
+
+    iteration {
+        action a {
+            provides { c }
+        }
+        iteration {
+            action c {
+                requires { c }
+                provides { d }
+            }
+            action d {
+                requires { d }
+                provides { b }
+            }
+        }
+        action b {
+            requires { b }
+        }
+    }
+}
+```
+When run the nested iterations will execute 4 times each. This follows the engineers induction rule as suggested by A. Butterfield.
+
+
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
-The radio buttons allow the user to specify the start state of each resource in the PML system. 
-By default each resource is left as false. 
+The radio buttons allow the user to specify the start state of each resource in the PML system.
+By default each resource is left as false.
 By changing to true this allows the resource to be provided as soon as the system starts.
 
 
@@ -434,4 +464,3 @@ After Docker has been installed:
 * ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 * ```./launch.sh```
 * ```cd /opt/group-project```
-
