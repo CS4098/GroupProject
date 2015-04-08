@@ -211,7 +211,8 @@ Use ```sudo emacs /etc/apache2/envvars``` and change the following lines (replac
 * ```export APACHE_RUN_GROUP=www-data``` -> ```export APACHE_RUN_GROUP=username```
 
 ## Testing
-To run all of the project test run ```make test``` from the project root directory. 
+To run all of the project test run ```make test``` from the project root directory.
+Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail. 
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
 From there you will be presented with a form where you can upload a pml file. 
