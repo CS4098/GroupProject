@@ -4,41 +4,49 @@
 Project repo for the CS4098 module in Trinity College Dublin. The purpose of this project is to build a model checker for the PML (process modelling language).
 
 
-## Requirements
-### Installation on Windows
+# Requirements
+## Installation on Windows
 We do not support Windows and cannot guarantee the following will work.
 
-### Installation on Mac OS X
+## Installation on Mac OS X
 We do not support Mac OS X and cannot guarantee the following will work.
 
-### Installation on Ubuntu 14.04
-To install natively on Ubuntu 14.04 there are several dependencies that must installed. Unless otherwise noted, any commands listed here should be run from the project root.
+## Installation on Ubuntu 14.04
+To install natively on Ubuntu 14.04 there are several dependencies that must installed.
 
-#### Install build tools, curl, mercurial, git, pip, java
+### Install build tools, curl, mercurial, git, pip, java
 * ```sudo apt-get update && sudo apt-get install -y build-essential```
 * ```sudo apt-get install -y curl```
-* ```sudo apt-get -y install python-pip```
+* ```sudo apt-get install -y python-pip```
 * ```sudo apt-get install -y mercurial```
 * ```sudo apt-get install -y git```
 * ```sudo apt-get install -y default-jdk```
 
-### Running with Web Based UI
+### Install and Setup Apache
 
 #### HTTP Server
 A server is required to run the front end, Apache was used during development and this documentation will be for an Apache set up.
-To install the latest version of Apache on Ubuntu use ```sudo apt-get install apache2```
+To install the latest version of Apache on Ubuntu use ```sudo apt-get install -y apache2```
 
 #### Enabling CGI
 First, the Apache server must be allowed to execute cgi scripts. Currently the Apache files are located in /etc/apache2, although this may be different in other versions.
 
 Use ```sudo a2enmod cgid``` to enable cgi scripts
 
-#### Project location
-Once Apache has been installed, you can download the project files. 
-For easiest installation we recommend cloning or copying the project into the apache root directory.
-On Ubuntu 14.04 this directory is ```/var/www/html```
+After enabling CGI, Apache must be restarted, however this can wait for the moment as we are about to edit the config file.
 
-When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like.
+### Project location
+Once Apache has been installed, you can download the project files.
+For easiest installation we recommend cloning or copying the project into the apache root directory.
+On Ubuntu 14.04 this directory is ```/var/www/html```. To clone the project to this location use:
+* ```cd /var/www/html```
+* ```sudo git clone https://github.com/CS4098/GroupProject```
+* ```cd GroupProject```
+
+Unless otherwise noted, any commands listed here from now on should be run from the project root.
+
+When the Project location is chosen Apache needs to be told where cgi scripts will be and what they will look like. Open the apache2.conf file:
+* ```sudo emacs /etc/apache2/apache2.conf```
 
 In the /etc/apache2/apache2.conf file add a Directory tag for the project location containing the following directives:
 * ```Options +ExecCGI```
@@ -52,9 +60,10 @@ For Example, if the default location is used:
 </Directory>
 ```
 
-The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file.
+Now Apache must be restarted so all changes take effect.
+* ```sudo service apache2 restart```
 
-#### Python Dependencies
+### Python Dependencies
 Python 2.6 or later
 * ```https://www.python.org/downloads/```
 
@@ -65,28 +74,43 @@ Other dependencies.
 Run this from the project root
 * ```sudo pip install -r requirements.txt```
 
-#### Install Spin/Promela
-Run either of these from the project root.
+### Install Spin/Promela
+Run this from the project root.
 
 64-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
+* ```sudo mkdir -p spin && sudo curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && sudo gunzip spin/spin.gz && sudo chmod +x spin/spin```
 
-32-bit Linux:
-* ```mkdir -p spin && curl http://spinroot.com/spin/Bin/spin643_linux32.gz -o spin/spin.gz && gunzip spin/spin.gz && chmod +x spin/spin```
-
-#### Install Haskell and the BNFC library
+### Install Haskell and the BNFC library
 * ```sudo apt-get install -y ghc ghc-prof ghc-doc```
 * ```sudo apt-get install -y cabal-install```
 * ```cabal update```
-* ```hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+* ```sudo hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
+
+### Apache Permissions
+
+The user Apache runs as will need permissions to create and delete files in the project location. The user can be viewed or changed in the /etc/apache2/envvars file. The default Apache user is ```www-data```; if you change this user, wherever ```www-data``` is seen in the following commands, you will need to replace it with your given user name. To give this user the appropriate permissions, run:
+* ```sudo chown -R www-data:www-data /var/www/html/GroupProject```
+
+Now this will cause some permissions issues with the Ubuntu user you are personally using. We suggest using groups to solve this as detailed here. This will involve having to log out and log back in. We have provided alternate solutions (if you don't want to follow this method or if it does not work for you) in a section titled "Alternative Apache Permissions" further below in this document.
+
+To add the current user to the www-data group and give the group write permissions in the project directory use the following commands (replacing "username" with your own username):
+* ```sudo usermod -a -G www-data username```
+* ```sudo chmod -R g+w /var/www/html/GroupProject```
+
+You MUST log out and log back in now for these changes to take effect.
 
 ### Install Cabal and create sandbox
-In order to use a sandboxed environment, cabal version 1.18 or greater is required
-* ```cabal install cabal cabal-install```
-It has been found that the above can fail due to a missing zlib dependency. If this happens we recommend installing the following.
-* ```sudo apt-get install -y zlib1g-dev```
 
-* You may have to update your PATH now as it still points to a version of cabal less than 1.18. Use ```cabal --version``` to check you have the correct version.
+In order to use a sandboxed environment, cabal version 1.18 or greater is required.
+It has been found that the installation can fail due to a missing zlib dependency so we recommend installing zlib first:
+* ```sudo apt-get install -y zlib1g-dev```
+* ```cabal install cabal cabal-install```
+
+You may have to update your PATH now as it still points to a version of cabal less than 1.18. By default, cabal will install to the current user's home directory. To modify PATH run:
+* ```export PATH=~/.cabal/bin:$PATH```
+
+Use ```cabal --version``` to check you have the correct version. From the project root run:
+
 * ```cabal sandbox init```
 * ```cabal update```
 
@@ -95,10 +119,26 @@ Install haskell dependencies, alex and happy.
 * ```sudo apt-get install -y happy```
 * ```cabal install --only-dependencies```
 
-## Building
+### Apache PATH
+
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```.
+
+We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
+* ```sudo emacs /etc/apache2/envvars```
+
+Add the following line (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
+
+Apache will then have to be restarted to enable access:
+* ```sudo service apache2 restart```.
+
+### Building
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
 * ```export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin```
+
 If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
+
+Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail.
 
 Build the program:
 * ```make build```
@@ -109,15 +149,11 @@ Build the program and run unit tests:
 Clean target directory:
 * ```make clean```
 
-### Apache PATH
+## Running with Web Based UI
 
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
+### Using the UI
 
-We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox).
-Add the following line to /etc/apache2/envvars (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
-
-Apache will then have to be restarted to enable access ```sudo /etc/init.d/apache2 restart```.
+Apache uses 127.0.0.1 as the default local IP address. Navigating to http://127.0.0.1/GroupProject in any web browser should take you to the web page.
 
 ## Running from Command-Line
 
@@ -155,11 +191,31 @@ where
 * ```<path-to-trail-file>``` is the trail file; its location will be given in the Spin output from when it was run in Verification mode.
 * ```<path-to-spin-output-file>``` is the target file where Spin output is to be redirected to; if the file already exists, the script will over-write it.
 
+## Alternative Apache Permissions
+
+### Running commands as www-data
+
+Instead of adding the current user to the www-data group we can run commands as the www-data user. We still change ownership of the project to www-data using ```sudo chown -R www-data:www-data /var/www/html/GroupProject```. However instead of adding the current user to the group we modify some of the commands:
+*```cabal sandbox init``` -> ```sudo env PATH=$PATH' cabal sandbox init```
+*```make build``` -> ```sudo -u www-data env PATH=$PATH' make build```
+*```make test``` -> ```sudo -u www-data env PATH=$PATH' make test```
+*```make clean``` -> ```sudo -u www-data env PATH=$PATH' make clean```
+
+### Changing Apache's default user
+Instead of changing ownership of the project directory to www-data change it to be the current user (replacing "username" with your own username):
+*```sudo chown -R username:username /var/www/html/GroupProject```
+
+In the /etc/apache2/envvars file we can change the user and group that Apache runs as. This means we can set it to be the current user.
+Use ```sudo emacs /etc/apache2/envvars``` and change the following lines (replacing "username" with your own username):
+* ```export APACHE_RUN_USER=www-data``` -> ```export APACHE_RUN_USER=username```
+* ```export APACHE_RUN_GROUP=www-data``` -> ```export APACHE_RUN_GROUP=username```
+
 ## Testing
-To run all of the project test run ```make test``` from the project root directory. 
+To run all of the project test run ```make test``` from the project root directory.
+Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail.
 To test each of the features individually a valid PML file can be uploaded to the apache webserver.
 Follow the above instructions to set up the apache server and then visit the location of the projects index.html file.
-From there you will be presented with a form where you can upload a pml file. 
+From there you will be presented with a form where you can upload a pml file.
 Click submit to be presented with the output of the program.
 
 The following webpage should contain the inputed pml file and at the generated promela code.
@@ -342,10 +398,40 @@ When run, the system will perform Sequences seq1 and seq2 in parallel.
 
 Note that, due to a restriction concerning the underlying Spin system, nested branching is not supported. Entering a PML file featuring nested branch constructs produces undefined behaviour.
 
+### Iteration
+To test iteration, pass a pml file containing iteration constructs to the system.
+
+Example iteration construct:
+```
+process itNested {
+
+    iteration {
+        action a {
+            provides { c }
+        }
+        iteration {
+            action c {
+                requires { c }
+                provides { d }
+            }
+            action d {
+                requires { d }
+                provides { b }
+            }
+        }
+        action b {
+            requires { b }
+        }
+    }
+}
+```
+When run the nested iterations will execute 4 times each. This follows the engineers induction rule as suggested by A. Butterfield.
+
+
 ### User Space Predicates
 The user space feature can be tested on the second webpage in the radio select boxes at the bottom of the page.
-The radio buttons allow the user to specify the start state of each resource in the PML system. 
-By default each resource is left as false. 
+The radio buttons allow the user to specify the start state of each resource in the PML system.
+By default each resource is left as false.
 By changing to true this allows the resource to be provided as soon as the system starts.
 
 
@@ -378,4 +464,3 @@ After Docker has been installed:
 * ```cd groupproject && hg clone https://PinPinIre@bitbucket.org/PinPinIre/pml-bnfc```
 * ```./launch.sh```
 * ```cd /opt/group-project```
-

@@ -12,7 +12,7 @@ class pmlFile(unittest.TestCase):
 
     def testUI(self):
         driver = self.driver
-        driver.get("http://vps138348.ovh.net/GroupProject/")
+        driver.get("http://localhost/GroupProject/")
 
         fileUpload = driver.find_element_by_name("pmlfile")
         fileUpload.send_keys("src/test/uitest/test.pml")
@@ -31,7 +31,7 @@ class promelaGenerator(unittest.TestCase):
 
     def testUI(self):
         driver = self.driver
-        driver.get("http://vps138348.ovh.net/GroupProject/")
+        driver.get("http://localhost/GroupProject/")
 
         fileUpload = driver.find_element_by_name("pmlfile")
         fileUpload.send_keys("src/test/uitest/test.pml")
@@ -49,7 +49,7 @@ class spinOutput(unittest.TestCase):
 
     def testUI(self):
         driver = self.driver
-        driver.get("http://vps138348.ovh.net/GroupProject/")
+        driver.get("http://localhost/GroupProject/")
 
         fileUpload = driver.find_element_by_name("pmlfile")
         fileUpload.send_keys("src/test/uitest/test.pml")
@@ -70,7 +70,7 @@ class spinTrailOutput(unittest.TestCase):
 
     def testUI(self):
         driver = self.driver
-        driver.get("http://vps138348.ovh.net/GroupProject/")
+        driver.get("http://localhost/GroupProject/")
 
         fileUpload = driver.find_element_by_name("pmlfile")
         fileUpload.send_keys("src/test/uitest/test.pml")
@@ -81,6 +81,31 @@ class spinTrailOutput(unittest.TestCase):
 
         spin = driver.find_element_by_id("spintrail")
         assert spin.text != ""
+
+    def tearDown(self):
+        self.driver.quit()
+
+class predicate(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Remote("http://localhost:4444/wd/hub", webdriver.DesiredCapabilities.HTMLUNIT.copy())
+
+    def testUI(self):
+        driver = self.driver
+        driver.get("http://localhost/GroupProject/")
+
+        fileUpload = driver.find_element_by_name("pmlfile")
+        fileUpload.send_keys("src/test/uitest/test.pml")
+        fileUpload.submit()
+
+        button = driver.find_element_by_id("predicate")
+        button.click()
+
+        resource = driver.find_element_by_id("resource").text
+        button.submit()
+
+        predicate = driver.find_element_by_id("predicate").text
+        value = predicate.encode("ascii").split("<> ")[1].split(")")[0]
+        assert resource == value
 
     def tearDown(self):
         self.driver.quit()
