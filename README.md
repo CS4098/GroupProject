@@ -138,6 +138,8 @@ To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. Fro
 
 If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
 
+Apache will need to be configured properly according to the previous instructions or else the Selenium unit tests will fail.
+
 Build the program:
 * ```make build```
 
