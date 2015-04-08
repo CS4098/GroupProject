@@ -66,13 +66,13 @@ print("</pre>")
 
 predicate = form.getvalue("predicate")
 if predicate == "none":
-    print("<p>No predicate selected.</p>")
+    print("<p id='nopredicate'>No predicate selected.</p>")
     spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, "verify"], stdout=subprocess.PIPE)
 elif predicate == "eventually":
     predresource = form.getvalue("eventually").split(".")[1]
     pred = ("!(<> ", predresource, ")")
     predparam = ''.join(pred)
-    print("<p>Predicate selected: " + predparam + "</p>")
+    print("<p id='predicate'>Predicate selected: " + predparam + "</p>")
     spin = subprocess.Popen(["../model-checker/model-check.sh", promelafile, spinfile, predparam, "verify"], stdout=subprocess.PIPE)
 
 spin.wait()
