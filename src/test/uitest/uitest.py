@@ -106,7 +106,6 @@ class predicate(unittest.TestCase):
         predicate = driver.find_element_by_id("predicate").text
         value = predicate.encode("ascii").split("<> ")[1].split(")")[0]
         assert resource == value
-        #print resource + " - " + value
 
     def tearDown(self):
         self.driver.quit()
