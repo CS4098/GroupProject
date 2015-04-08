@@ -75,7 +75,7 @@ Run this from the project root
 * ```sudo pip install -r requirements.txt```
 
 ### Install Spin/Promela
-Run either of these from the project root.
+Run this from the project root.
 
 64-bit Linux:
 * ```sudo mkdir -p spin && sudo curl http://spinroot.com/spin/Bin/spin643_linux64.gz -o spin/spin.gz && sudo gunzip spin/spin.gz && sudo chmod +x spin/spin```
@@ -109,7 +109,7 @@ It has been found that the installation can fail due to a missing zlib dependenc
 You may have to update your PATH now as it still points to a version of cabal less than 1.18. By default, cabal will install to the current user's home directory. To modify PATH run:
 * ```export PATH=~/.cabal/bin:$PATH```
 
-Use ```cabal --version``` to check you have the correct version. Next:
+Use ```cabal --version``` to check you have the correct version. From the project root run:
 
 * ```cabal sandbox init```
 * ```cabal update```
@@ -119,9 +119,23 @@ Install haskell dependencies, alex and happy.
 * ```sudo apt-get install -y happy```
 * ```cabal install --only-dependencies```
 
+### Apache PATH
+
+The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
+
+We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
+* ```sudo emacs /etc/apache2/envvars```
+
+Add the following line (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
+* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
+
+Apache will then have to be restarted to enable access:
+* ```sudo service apache2 restart```.
+
 ### Building
 To run the project you need to add ```Pmlxml``` and ```spin``` to your Path. From the checkout location run:
 * ```export PATH=$PATH:$PWD/.cabal-sandbox/bin:$PWD/spin```
+
 If you installed Spin or the cabal sandbox in another directory you will need to modify the above Path to point to the correct directory.
 
 Build the program:
@@ -134,18 +148,6 @@ Clean target directory:
 * ```make clean```
 
 ## Running with Web Based UI
-
-### Apache PATH
-
-The PATH used by Apache also needs to updated to include spin and the bnfc translator. Apache's original PATH looks like this ```PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin```. 
-
-We need to update it to include the paths to spin and our pmlxml translator (Which should be installed into the cabal sandbox). Open the envvars file:
-* ````sudo emacs /etc/apache2/envvars```
-Add the following line (replacing ```<path-to-project>``` with the path to where the project is located e.g. /var/www/html/GroupProject):
-* ```export  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<path-to-project>/.cabal-sandbox/bin:<path-to-project>/spin```
-
-Apache will then have to be restarted to enable access:
-* ```sudo service apache2 restart```.
 
 ### Using the UI
 
