@@ -97,8 +97,8 @@ else:
         print("<form class='main' enctype='multipart/form-data' method='POST' action='result.cgi'>")
 
         print("<p>Predicates can be specified and tested for:</p>")
+        print("<input type='radio' name='predicate' id='nopredicate' value='none' checked> No predicate<br>")
         if len(resourcelist) > 0:
-            print("<input type='radio' name='predicate' id='nopredicate' value='none' checked> No predicate<br>")
             print("<input type='radio' name='predicate' id='predicate' value='eventually'>")
             print("Resource <select name='eventually'>")
             for resource in resourcelist[0]:
